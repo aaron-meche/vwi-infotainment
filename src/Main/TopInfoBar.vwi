@@ -1,0 +1,29 @@
+
+{
+    
+}
+
+
+[] InfoChannel: value, label
+    HStack
+        size: 16pt
+        margin-right: 2rem
+
+        Text: $value
+            margin-right: 0.5rem
+            weight: 600
+        Text: $label
+            opacity: 0.75
+
+
+
+HStack
+    padding: 0 3rem
+    padding-top: 1rem
+    
+    InfoChannel
+        @value: 0h 0m
+        @label: drive time
+    InfoChannel
+        @value: 0.0 mi
+        @label: distance

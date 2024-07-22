@@ -1,0 +1,27 @@
+
+{
+    if (store.get("speed limit") == 0) {
+        document.getElementById("SpeedLimit").style.display = "none"
+    }
+}
+
+
+
+
+
+VStack
+    @id: SpeedLimit
+    margin: 3rem
+    padding: 0.75rem
+    background: rgb(255, 255, 255, 0.75)
+    backdrop-filter: blur(10pt)
+    color: black
+    align: center
+    border-radius: 0.25rem
+    
+    Text: LIMIT
+        size: 10pt
+        weight: 500
+    Text: {store.get("speed limit")}
+        size: 20pt
+        weight: 600

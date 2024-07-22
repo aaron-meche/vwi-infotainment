@@ -1,0 +1,24 @@
+
+HStack
+    Text: "Project"
+        @class: TopButton
+    Text: "Structure"
+        @class: TopButton
+    Text: "Assets"
+        @class: TopButton
+    Text: "Developer"
+        @class: TopButton
+    Text: "Developer"
+        @class: TopButton
+    Text: "Developer"
+        @class: TopButton
+
+$ TopButton
+    padding: 0.5rem 1.5rem
+    size: 10pt
+    weight: 500
+    cursor: pointer
+$ TopButton:hover
+    background: [l3]
+$ TopButton.active
+    background: [l3]

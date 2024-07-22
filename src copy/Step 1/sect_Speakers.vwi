@@ -1,0 +1,10 @@
+
+VStack
+    padding: 4rem 2rem
+
+    Text: Speakers
+        margin-bottom: 1rem
+        size: 20pt
+        weight: 500
+        
+    Import: Step 1/comp_SpeakerGrid

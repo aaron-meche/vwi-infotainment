@@ -1,0 +1,22 @@
+
+
+{
+    function reload() {
+        store.set("time", Date.now())
+    }
+}
+
+
+VStack
+    padding: 4rem 2rem
+
+    Text: Storage Manager
+        margin-bottom: 1rem
+        size: 20pt
+        weight: 600
+    Text: It is currently: {store.get("time")}
+    Text: Reload
+        @onclick: reload()
+        width: fit-content
+        padding: 1rem 2rem
+        background: [l1]

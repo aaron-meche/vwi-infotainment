@@ -1,0 +1,57 @@
+
+{
+    store.safety("speed", 0)
+    store.set("dimension", 3)
+
+    function toggleDimension() {
+        let dimension = store.get("dimension")
+        if (dimension == 2) {
+            map.easeTo({ pitch: 60 })
+            store.set("dimension", 3)
+        }
+        else {
+            map.easeTo({ pitch: 0 })
+            store.set("dimension", 2)
+        }
+    }
+
+    function currentLocation() {
+        map.easeTo(standard_map_config())
+    }
+
+    // let theme_icons = ["cloud-sun", "sun", "star", "moon"]
+    // function changeTheme() {
+    //     console.log("Change")
+    //     let active_theme = store.get("active theme") + 1
+    //     if (active_theme > 3) active_theme = 0
+    //     store.set("active_theme", active_theme)
+    //     map.setStyle(map_styles[active_theme])
+    //     // if (active_theme > 3) active_theme = 0
+    //     // updateState()
+    // }
+}
+
+
+
+VStack    
+    // Block
+    //     @class: MapButton
+    //     @onclick: changeTheme()
+    //     Text: {Icon(theme_icons[store.get("active theme")])}
+    Block
+        @class: MapButton
+        @onclick: toggleDimension()
+        Text: {store.get("dimension") == 2 ? "3D" : "2D"}
+    Block
+        @class: MapButton
+        @onclick: currentLocation()
+        padding-bottom: 3rem
+        Text: {Icon("location-dot")}
+
+
+.MapButton
+    size: 16pt
+    weight: 600
+    align: center
+    cursor: pointer
+    padding: 1.5rem 3rem

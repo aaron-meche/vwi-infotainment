@@ -1,0 +1,15 @@
+
+
+HStack
+    padding: 1rem 3rem
+    align-items: baseline
+    size: 30pt
+    weight: 500
+    
+    Text: {Math.floor(store.get("speed"))}
+        margin-right: 0.5rem
+        size: 80pt
+        weight: 700
+    Text: mph
+
+// Text: {store.get("speed limit")} limit

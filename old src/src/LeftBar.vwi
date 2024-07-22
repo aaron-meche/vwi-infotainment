@@ -1,0 +1,46 @@
+
+
+Grid
+    height: 100%
+    background: [l1]
+
+    VStack
+
+        Text: "All Channels"
+            @class: Folder Tier1
+
+            Text: "Front L Full"
+                @class: File Tier2 active
+            Text: "Front R Full"
+                @class: File Tier2
+            Text: "Subwoofer 1"
+                @class: File Tier2
+            Text: "Subwoofer 2"
+                @class: File Tier2
+            Text: "Front L High"
+                @class: File Tier2
+            Text: "Front R High"
+                @class: File Tier2
+
+$ Folder
+    padding: 0.5rem
+    margin-top: 1rem
+    weight: 500
+$ Folder:hover
+    background: [l2]
+
+$ File
+    padding: 0.5rem
+    size: 10pt
+    cursor: pointer
+$ File:hover
+    background: [l2]
+$ File.active
+    background: [l2]
+    color: [accent]
+    weight: 500
+
+$ Tier1
+    padding-inline: 1.5rem
+$ Tier2
+    padding-inline: 2.5rem

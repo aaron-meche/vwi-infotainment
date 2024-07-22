@@ -1,0 +1,45 @@
+
+{
+    document.documentElement.style.setProperty('--hue', 200)
+    document.documentElement.style.setProperty('--sat', "30%")
+}
+
+Import: Foundation
+Import: API/Map
+Import: API/ThemeSwitch
+
+// Speed
+VStack
+    position: absolute
+    top: 0
+    left: 0
+
+    // Import: Main/TopInfoBar
+        // width: fit-content
+    Import: Main/SpeedDisplay
+        width: fit-content
+
+// Speed Limit
+VStack
+    position: absolute
+    top: 0
+    right: 0
+
+    Import: Main/SpeedLimitDisplay
+        width: fit-content
+
+// Bottom Right Map Buttons
+VStack
+    position: absolute
+    bottom: 0
+    right: 0
+
+    Import: Buttons/Buttons
+
+// Bottom Left Location
+VStack
+    position: absolute
+    bottom: 0
+    left: 0
+
+    Import: Location/Location

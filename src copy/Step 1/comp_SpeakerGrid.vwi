@@ -1,0 +1,202 @@
+
+{
+    let speakers = [
+        {
+            type: "S",
+            position: "RC",
+            range: [20, 100],
+            active: false
+        },
+        {
+            type: "F",
+            position: "FL",
+            range: [100, 5000],
+            active: false
+        },
+        {
+            type: "F",
+            position: "FR",
+            range: [100, 5000],
+            active: false
+        },
+        {
+            type: "H",
+            position: "FL",
+            range: [5000, 20000],
+            active: false
+        },
+        {
+            type: "H",
+            position: "FR",
+            range: [5000, 20000],
+            active: false
+        },
+    ]
+
+    function toggleSpeaker(speaker) {
+        speaker.active = !speaker.active
+        updateState()
+        console.log("freq")
+        let freqDiff = speaker.range[1] - speaker.range[0]
+        let freqHemi = freqDiff / 2
+        let freqMid = speaker.range[0] + freqHemi
+        playFrequencyWithPan(100, 1, 0)
+    }
+
+    function getSpeakerPosition(speaker) {
+        let res = ""
+
+        if (speaker.position[0] == "F") {
+            res = "Front"
+        }
+        else if (speaker.position[0] == "R") {
+            res = "Rear"
+        }
+
+        if (speaker.position[1] == "L") {
+            res += " Left"
+        }
+        else if (speaker.position[1] == "R") {
+            res += " Right"
+        }
+        return res
+    }
+
+    function getSpeakerType(speaker) {
+        let name = ""
+        if (speaker.type[0] == "S") {
+            name = "Subwoofer"
+        }
+        else if (speaker.type[0] == "F") {
+            name = "Full Range"
+        }
+        else if (speaker.type[0] == "H") {
+            name = "High Range"
+        }
+        return name
+    }
+
+    function getSpeakerIcon(speaker) {
+        let side = speaker.position[1]
+        let range = speaker.type[0]
+        let direction = ""
+        let type = ""
+
+        if (side == "L") {
+            direction = "arrow-left-long"
+        }
+        else if (side == "R") {
+            direction = "arrow-right-long"
+        }
+        else {
+            direction = "arrow-down"
+        }
+
+        if (range == "S") {
+            type = "hill-rockslide"
+        }
+        else if (range == "F") {
+            type = "volume-high"
+        }
+        else if (range == "H") {
+            type = "dove"
+        }
+
+        return [Icon(direction), Icon(type)]
+    }
+
+    if (!window.audioContext) {
+        window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    function playFrequencyWithPan(frequency, duration, panValue) {
+        // Use the globally declared audioContext
+        const audioContext = window.audioContext;
+
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        const panner = audioContext.createStereoPanner();
+
+        oscillator.type = 'sine'; // Type of wave: sine, square, sawtooth, triangle
+        oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime); // Frequency in Hz
+        oscillator.connect(gainNode);
+        gainNode.connect(panner);
+        panner.connect(audioContext.destination);
+
+        panner.pan.setValueAtTime(panValue, audioContext.currentTime); // -1 (left), 0 (center), 1 (right)
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + duration); // Stop after specified duration
+    }
+}
+
+Audio
+    @controls: 
+    height: 5rem
+    width: 20rem
+    background:red
+    Source
+        @src:
+        @type: audio/mpeg
+
+GridEachStack: speakers as speakerObj
+    @class: SpeakerGrid
+    Button
+        @class: SpeakerGridItem
+        @onclick: toggleSpeaker(speakerObj)
+        display: grid
+        grid-column: min-content min-content auto min-content
+        gap: 1rem
+        align-items: center
+
+        Text: {getSpeakerIcon(speakerObj)[0]}
+        Text: {getSpeakerIcon(speakerObj)[1]}
+        VStack
+            Text: {getSpeakerType(speakerObj)}
+                weight: 500
+            Text: {getSpeakerPosition(speakerObj)}
+                size: 10pt
+                weight: 400
+                opacity: 0.75
+        Block
+            @class: SpeakerToggle {speakerObj.active ? "active" : ""}
+            Block
+                @class: SpeakerToggleCoin
+
+.SpeakerGrid
+    grid-column: repeat(auto-fill, minmax(16rem, 1fr))
+
+.SpeakerGridItem
+    padding: 1rem
+    border-radius: 0.5rem
+    cursor: pointer
+.SpeakerGridItem:hover
+    background: [l1]
+.SpeakerGridItem.add
+    background: none
+    box-shadow: inset 0 0 0 2pt [l1]
+.SpeakerGridItem.add:hover
+    background: [l1]
+
+.SpeakerLabel
+    weight: 500
+
+.SpeakerToggle
+    position: relative
+    padding: 0.25rem
+    background: [l2]
+    border-radius: 100vh
+
+.SpeakerToggleCoin
+    height: 1rem
+    margin-right: 1rem
+    ratio: 1 / 1
+    background: [l5]
+    border-radius: 100vh
+.SpeakerToggle.active .SpeakerToggleCoin
+    margin-left: 1rem
+    margin-right: 0
+    background: [accent] !important

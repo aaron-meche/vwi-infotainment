@@ -1,0 +1,83 @@
+@font-face {
+    font-family: BaileyScript;
+    src: url('./SansSerif/ExtraLight.otf') format('opentype');
+    font-weight: 200;
+}
+@font-face {
+    font-family: BaileyScript;
+    src: url('./SansSerif/Light.otf') format('opentype');
+    font-weight: 300;
+}
+@font-face {
+    font-family: BaileyScript;
+    src: url('./SansSerif/Regular.otf') format('opentype');
+    font-weight: 400;
+}
+@font-face {
+    font-family: BaileyScript;
+    src: url('./SansSerif/Medium.otf') format('opentype');
+    font-weight: 500;
+}
+@font-face {
+    font-family: BaileyScript;
+    src: url('./SansSerif/Bold.otf') format('opentype');
+    font-weight: 600;
+}
+@font-face {
+    font-family: BaileyScript;
+    src: url('./SansSerif/ExtraBold.otf') format('opentype');
+    font-weight: 700;
+}
+@font-face {
+    font-family: BaileyScript;
+    src: url('./SansSerif/Black.otf') format('opentype');
+    font-weight: 800;
+}
+@font-face {
+    font-family: BaileyScript;
+    src: url('./SansSerif/ExtraBlack.otf') format('opentype');
+    font-weight: 900;
+}
+
+:root{
+	--hue: 270;
+	--sat: 20%;
+	--strt: 12%;
+	--diff: 4%;
+
+	--accent: hsl(var(--hue), 40%, 60%);
+	--accent-transparent: hsl(var(--hue), 64%, 70%, 40%);
+	--contrast: hsl(var(--hue), var(--sat), calc(100% - var(--strt)));
+	--contrast-transparent: hsl(var(--hue), var(--sat), calc(100% - var(--strt)), 40%);
+	--bg: hsl(var(--hue), var(--sat), calc(var(--strt) + (0 * var(--diff))));
+	--bg-transparent: hsl(var(--hue), var(--sat), calc(var(--strt) + (0 * var(--diff))), 40%);
+	--pure: hsl(var(--hue), var(--sat), 0%);
+	--l1: hsl(var(--hue), var(--sat), calc(var(--strt) + (1 * var(--diff))));
+	--l2: hsl(var(--hue), var(--sat), calc(var(--strt) + (2 * var(--diff))));
+	--l3: hsl(var(--hue), var(--sat), calc(var(--strt) + (3 * var(--diff))));
+	--l4: hsl(var(--hue), var(--sat), calc(var(--strt) + (4 * var(--diff))));
+	--l5: hsl(var(--hue), var(--sat), calc(var(--strt) + (5 * var(--diff))));
+    --red: hsl(0, 80%, 50%);
+    --orange: hsl(30, 80%, 50%);
+    --yellow: hsl(60, 80%, 40%);
+    --green: hsl(120, 80%, 40%);
+    --blue: hsl(240, 80%, 55%);
+    --purple: hsl(270, 80%, 45%);
+    --magenta: hsl(300, 80%, 40%);
+
+	--inline-moat: 6rem;
+}
+
+/* @media (prefers-color-scheme: light) {
+    body.light :root{
+        --strt: 92%;
+        --diff: -4%;
+    }
+} */
+
+body{
+    margin: 0;
+    font-family: BaileyScript;
+    background: var(--bg);
+    color: var(--contrast);
+}

@@ -1,0 +1,23 @@
+
+{
+
+}
+
+VStack
+    margin: 3rem
+    size: 16pt
+    border-radius: 1rem
+
+    Text: {store.get("current city")}
+        size: 16pt
+        weight: 600
+    Text: {store.get("current county")}
+        size: 14pt
+        opacity: 0.9
+    Text: {store.get("current state")}
+        size: 14pt
+        opacity: 0.9
+    Text: {store.get("position").coords.longitude.toFixed(2)} W {store.get("position").coords.latitude.toFixed(2)} E
+        margin-top: 0.5rem    
+        size: 14pt
+        opacity: 0.75

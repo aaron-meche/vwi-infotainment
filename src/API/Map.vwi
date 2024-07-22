@@ -1,0 +1,120 @@
+
+ImportJSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js
+ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
+
+{
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYWFyb25tZWNoZSIsImEiOiJjbHlucHluNGYwOG1iMmtwcHN5ZmphMjU0In0.ZOvtm2moRAxAlLVWA4YDVQ';
+    store.safety("position", {coords: {longitude: 0, latitude: 0}})
+    store.safety("active theme", 2)
+    store.safety("speed", 0)
+    store.safety("speed limit", 0)
+
+    const map_styles = [
+        "mapbox://styles/aaronmeche/clyp7z96b007x01qn4rx6fmbb",
+        "mapbox://styles/aaronmeche/clyp7zcxx027301p80cet1y8p",
+        "mapbox://styles/aaronmeche/clyp7zbk9007y01qn07169in3",
+        "mapbox://styles/aaronmeche/clyp85cpy029d01qj4xw772yi",
+    ]
+
+    const standard_map_config = () => {
+        return {
+            container: 'map',
+            style: map_styles[2],
+            center: [store.get("position long"), store.get("position lat")],
+            bearing: store.get("heading"),
+            offset: [0, (window.innerHeight * 0.25)],
+            zoom: 16,
+            pitch: 60
+        }
+    }
+
+    const map = new mapboxgl.Map(standard_map_config())
+
+    const el = document.createElement('div')
+    el.className = "marker"
+
+    const marker = new mapboxgl.Marker(el).setLngLat([store.get("position").coords.longitude, store.get("position").coords.latitude]).addTo(map);
+
+    let lastPosition = null
+
+    function updateMapToLocation() {
+        map.easeTo(standard_map_config())
+    }
+
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(position => {
+            store.set("position", position)
+            store.set("position long", position.coords.longitude)
+            store.set("position lat", position.coords.latitude)
+            store.set("speed", Math.floor(position.coords.speed * 2.23694) || 0)
+            store.set("heading", position.coords.heading || 0)
+            marker.setLngLat([store.get("position long"), store.get("position lat")])
+            updateAPIs()
+            updateMapToLocation()
+        }, error => {
+            console.error('Error getting location: ', error);
+        }, {
+            enableHighAccuracy: true,
+            maximumAge: 500,
+            timeout: 27000
+        });
+    } 
+    else {
+        console.error('Geolocation is not supported by this browser.');
+    }
+
+    function updateAPIs(position) {
+        const featureUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${store.get("position long")},${store.get("position lat")}.json?access_token=${mapboxgl.accessToken}`;
+        fetch(featureUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.features && data.features.length > 0) {
+                    const features = data.features
+                    store.set("features", features)
+                    store.set("current city", features.find(feature => feature.place_type.includes("place")).text)
+                    store.set("current county", features.find(feature => feature.place_type.includes("district")).text)
+                    store.set("current state", features.find(feature => feature.place_type.includes("region")).text)
+                }
+            })
+            .catch(error => console.error('Error with features api:', error));
+        
+        const speedLimitUrl = `https://api.mapbox.com/v4/mapbox.mapbox-traffic-v1/tilequery/${store.get("position long")},${store.get("position lat")}.json?radius=100&layers=speed&access_token=${mapboxgl.accessToken}`;
+        fetch(speedLimitUrl)
+            fetch(speedLimitUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    try {
+                        const speedLimitKmh = data.features[0].properties.maxspeed
+                        const speedLimitMph = speedLimitKmh * 0.621371
+                        store.set("speed limit", Math.floor(speedLimitMph))
+                    }
+                    catch (error) { }
+                })
+                .catch(error => console.error('Error fetching speed limit data:', error));
+    }
+}
+
+Block
+    position: fixed
+    top: 0
+    left: 0
+    height: 100vh
+    width: 100vw
+    z-index: 0
+
+    Block
+        @id: map
+        height: 100%
+        width: 100%
+
+.marker
+    position: absolute
+    top: 0
+    left: 0
+    height: 1rem
+    width: 1rem
+    background: [purple]
+    outline: solid 0.2rem rgb(200 200 200)
+    size: 25pt
+    border-radius: 100vh

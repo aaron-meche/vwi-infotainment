@@ -1,0 +1,29 @@
+
+Import: foundation
+
+VStack
+    padding: 4rem 2rem
+    background: hsl(270, 32%, 16%)
+    color: white
+
+    Text: Audio Tuner
+        size: 24pt
+        weight: 600
+    HStack
+        margin-top: 0.5rem
+        Link: {Icon("arrow-right")} Start
+            @href: Step 1
+            @class: MainClickButtons
+            background: hsl(270, 32%, 48%)
+        Link: {Icon("chevron-right")} Continue
+            @href: /
+            @class: MainClickButtons
+
+.MainClickButtons
+    width: fit-content
+    padding: 1rem 2rem
+    border-radius: 100rem
+    weight: 500
+    cursor: pointer
+.MainClickButtons:hover
+    color: [accent]
