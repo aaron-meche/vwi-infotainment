@@ -11,26 +11,44 @@ Import: API/TimeManager
 PageTitle: Infotainment
 PageIcon: favicon.png
 
-// TOP LEFT
-// Speed + Limit
-VStack
+Grid
     position: fixed
     top: 0
     left: 0
+    height: 100vh
+    grid-row: min-content auto
 
-    Import: Main/SpeedDisplay
-        width: fit-content
-    Import: Main/SpeedLimitDisplay
-        width: fit-content
+    // TOP LEFT
+    // Speed + Limit
+    VStack
+        Import: Main/SpeedDisplay
+            width: fit-content
+        Import: Main/SpeedLimitDisplay
+            width: fit-content
 
-// BOTTOM LEFT
-// Location Info
-VStack
-    position: fixed
-    bottom: 0
-    left: 0
+    // BOTTOM LEFT
+    // Location Info
+    HStack
+        @class: snap
+        width: 20rem
+        margin: 3.5rem
+        border-radius: 1.5rem
 
-    Import: Location/Location
+        Import: SwipeModules/Location
+            @class: BottomRightModule
+        Import: SwipeModules/Music
+            height: 100%
+            @class: BottomRightModule
+
+.BottomRightModule
+    height: fit-content
+    width: 17rem
+    margin-top: auto
+    margin-right: 1rem
+    padding: 1.5rem
+    background: [primary50]
+    backdrop-filter: blur(1.5rem)
+    border-radius: inherit
 
 // TOP RIGHT
 // Buttons
@@ -57,4 +75,4 @@ Block
     bottom: 0
     left: 50vw
     
-    Import: Location/LocationPill
+    Import: Main/LocationPill

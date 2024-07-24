@@ -7,7 +7,8 @@ function checkForUpdate() {
 			if (currentVersion === null) {
 				currentVersion = data.version;
 				console.log("On version: " + data.version)
-			} else if (data.version !== currentVersion) {
+			} 
+			else if (data.version !== currentVersion) {
 				location.reload();
 			}
 		})

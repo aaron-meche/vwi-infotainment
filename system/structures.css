@@ -55,6 +55,7 @@
     grid-auto-flow: column;
     grid-auto-columns: max-content;
     overflow-x: auto;
+    overflow-y: hidden;
 }
 [ui="h-stack"].snap{
     scroll-snap-type: x mandatory;

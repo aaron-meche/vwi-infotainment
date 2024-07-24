@@ -47,13 +47,12 @@ function findViewFiles(dir, basePath = "/") {
     return viewFiles;
 }
 
+
+console.log("(*   ) Copying public files")
 copyFiles(publicPath, outputPath);
 
 const viewFiles = findViewFiles(sourcePath);
-
-// console.log('View files found:', viewFiles);
-
-// fs.writeFileSync(path.join(outputDir, 'viewFiles.json'), JSON.stringify(viewFiles, null, 2));
+console.log(`(**  ) Compiling ${viewFiles.length} view file${viewFiles.length > 1 ? "s" : ""}`)
 
 viewFiles.forEach(file => {
     const fileContent = fs.readFileSync(file.fullPath, 'utf-8');
@@ -63,7 +62,9 @@ viewFiles.forEach(file => {
         const script = "<script>" + [getBaseJS(__dirname), DOM.js].join("\n") + "</script>";
         const htmlFileContent = head + DOM.html + style + script
         const htmlFilePath = path.join(outputPath, file.relativePath, "index.html")
-        // fs.mkdirSync(htmlFilePath, { recursive: true });
+        fs.mkdirSync(file.relativePath, { recursive: true });
         fs.writeFileSync(htmlFilePath, htmlFileContent, 'utf-8');
     }, __dirname);
 })
+console.log("(*** ) Finished compiling")
+console.log("(****) Build complete! \n")

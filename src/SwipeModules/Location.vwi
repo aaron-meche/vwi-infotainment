@@ -4,12 +4,6 @@
 }
 
 VStack
-    margin: 2rem
-    padding: 1.5rem
-    background: [primary50]
-    backdrop-filter: blur(1.5rem)
-    border-radius: 0.5rem
-    
     Text: {store.get("current city")}
         size: 16pt
         weight: 600

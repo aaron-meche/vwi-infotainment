@@ -3,6 +3,9 @@ import path from 'path'
 import fs from 'fs'
 
 export function getBaseJS(__dirname, liveBool) {
+    if (__dirname == null) { // Live server live reload for 404 status
+        return fs.readFileSync(path.join(__dirname, 'system/live.js'), 'utf-8')
+    }
     let jsArr = [
         fs.readFileSync(path.join(__dirname, 'system/state.js'), 'utf-8'),
         fs.readFileSync(path.join(__dirname, 'system/store.js'), 'utf-8'),

@@ -41,11 +41,11 @@ function openPage(req, res, routePath) {
         new View(fileContent, DOM => {
             const head = [getBaseHeadHTML(__dirname), DOM.head].join("\n");
             const style = "<style>" + [getBaseCSS(__dirname), DOM.css].join("\n") + "</style>"
-            const script = "<script>" + [getBaseJS(__dirname), DOM.js].join("\n") + "</script>";
+            const script = "<script>" + [getBaseJS(__dirname, true), DOM.js].join("\n") + "</script>";
             res.send(head + DOM.html + style + script);
         }, __dirname);
     } catch (error) {
-        res.status(404).send('File not found');
+        res.status(404).send('File not found' + getBaseJS(null, true));
     }
 }
 

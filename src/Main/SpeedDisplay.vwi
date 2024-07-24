@@ -5,9 +5,9 @@
 // 0        -0.6
 //     0.6
 HStack
-    padding: 2rem
-    padding-top: 0.65rem
-    padding-bottom: 1.4rem
+    padding: 3.5rem
+    padding-top: 2.05rem
+    padding-bottom: 2.9rem
     border-radius: 0.5rem
     line-height: 1
     align-items: baseline
