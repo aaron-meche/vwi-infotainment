@@ -195,6 +195,7 @@ export class View {
     // Structure Library
     structures = {
         build: {
+            
             struct: (name, text, attr, type, bypassLiveState)  => {
                 if (bypassLiveState) {
                     this.html.push(`<${type ? type : "div"} ${this.gatherAttributes(true)} ${attr ? attr : ""} ui="${name?.trim()}">`)

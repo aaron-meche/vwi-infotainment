@@ -57,6 +57,9 @@
     overflow-x: auto;
     overflow-y: hidden;
 }
+[ui="h-stack"]::-webkit-scrollbar {
+    display: none;
+  }
 [ui="h-stack"].snap{
     scroll-snap-type: x mandatory;
 }

@@ -61,7 +61,7 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
             store.set("heading", 0)
         },
     }
-    dev_locations["Westlake"]()
+    dev_locations["Milwaukee"]()
 
     const map_styles = [
         "mapbox://styles/aaronmeche/clyp7z96b007x01qn4rx6fmbb",
@@ -70,15 +70,16 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
         "mapbox://styles/aaronmeche/clyp85cpy029d01qj4xw772yi",
     ]
 
+    let menuWidthOffset = 0
     const standard_map_config = () => {
         return {
             container: 'map',
-            style: map_styles[0],
+            style: map_styles[3],
             center: [store.get("position long"), store.get("position lat")],
             bearing: store.get("heading"),
-            offset: [0, (0.5 * window.innerHeight * (2 / 3))],
-            zoom: 16,
-            pitch: 60
+            offset: [menuWidthOffset, window.innerHeight * 0.35],
+            zoom: 15,
+            pitch: 64.5
         }
     }
 
@@ -101,7 +102,10 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
             updateAPIs()
 
             if (store.get("live follow") == "on") {
-                map.easeTo(standard_map_config())
+                map.easeTo({
+                    ...standard_map_config(),
+                    duration: 400
+                });
             }
             
         }, error => {

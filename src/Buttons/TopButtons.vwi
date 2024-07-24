@@ -25,8 +25,6 @@
 
 
 VStack
-    padding: 2rem
-
     Grid
         @class: TopMapButton
         @onclick: currentLocation()

@@ -25,28 +25,22 @@
 
 
 
-VStack
-    padding: 2rem
+HStack
+    height: 100%
+    align-items: center
+    margin: 0 2rem
 
-    Grid
+    Text: {store.get("dimension") == 2 ? "3D" : "2D"}
         @class: BottomMapButton
         @onclick: toggleDimension()
-        Text: {store.get("dimension") == 2 ? "3D" : "2D"}
-    Grid
+        weight: 500
+    Text: {Icon("location-dot")}
         @class: BottomMapButton
         @onclick: currentLocation()
-        Text: {Icon("location-dot")}
 
 
 .BottomMapButton
-    margin-top: 1rem
-    padding: 1.5rem
-    background: [primary50]
-    backdrop-filter: blur(1.5rem)
+    height: 100%
+    display: flex
     align-items: center
-    ratio: 1 / 1
-    size: 16pt
-    weight: 600
-    align: center
-    cursor: pointer
-    border-radius: 100vh
+    padding: 0 2rem

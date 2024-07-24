@@ -5,17 +5,16 @@
 // 0        -0.6
 //     0.6
 HStack
-    padding: 3.5rem
-    padding-top: 2.05rem
-    padding-bottom: 2.9rem
+    padding-right: 0.6rem
     border-radius: 0.5rem
     line-height: 1
     align-items: baseline
+    pointer-events: none;
     
     Text: {store.get("speed")}
         margin-right: 0.5rem
-        size: 100pt
-        weight: 700
+        size: 75pt
+        weight: 600
     Text: mph
         size: 25pt
         weight: 500

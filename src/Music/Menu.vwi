@@ -1,0 +1,52 @@
+
+
+
+{
+    store.set("music menu", "opened")
+
+    function openMusicMenu() {
+        const menu = document.getElementById("MusicMenu")
+        const speedDisplay = document.getElementById("SpeedDisplay")
+        menu.style.left = "0"
+        speedDisplay.style.translate = "35vw 0"
+        menuWidthOffset = window.innerWidth * 0.175
+        map.easeTo(standard_map_config())
+    }
+
+    function closeMusicMenu() {
+        const menu = document.getElementById("MusicMenu")
+        const speedDisplay = document.getElementById("SpeedDisplay")
+        menu.style.left = "-35vw"
+        menuWidthOffset = 0
+        speedDisplay.style.translate = "0 0"
+        map.easeTo(standard_map_config())
+    }
+
+    function toggleMusicMenu() {
+        if (store.get("music menu") == "closed") {
+            openMusicMenu()
+            store.set("music menu", "opened")
+        }
+        else {
+            closeMusicMenu()
+            store.set("music menu", "closed")
+        }
+    }
+
+}
+
+
+Wrapper
+    @id: MusicMenu
+    position: fixed
+    top: 0
+    left: 0vw
+    height: calc(100vh - 4.5rem)
+    width: 35vw
+    background: [primary50]
+    backdrop-filter: blur(1.5rem)
+    transition: left 400ms
+
+
+
+

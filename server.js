@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import https from 'https';
-import compression from 'compression';
 import serveStatic from 'serve-static';
 import { View, getBaseJS, getBaseHeadHTML, getBaseCSS } from './system/compiler.js';
 import express from 'express';
@@ -19,7 +18,6 @@ const __version = { version: Date.now() };
 
 const app = express();
 
-app.use(compression());
 app.use(serveStatic(path.join(__dirname, 'public')));
 
 app.get('/version', (req, res) => res.json(__version));
@@ -39,13 +37,22 @@ function openPage(req, res, routePath) {
     try {
         const fileContent = fs.readFileSync(routePath, 'utf-8');
         new View(fileContent, DOM => {
-            const head = [getBaseHeadHTML(__dirname), DOM.head].join("\n");
-            const style = "<style>" + [getBaseCSS(__dirname), DOM.css].join("\n") + "</style>"
-            const script = "<script>" + [getBaseJS(__dirname, true), DOM.js].join("\n") + "</script>";
-            res.send(head + DOM.html + style + script);
+            const head = [getBaseHeadHTML(__dirname), DOM.head].join("\n")
+            const style = [getBaseCSS(__dirname), DOM.css].join("\n")
+            const script = [getBaseJS(__dirname, true), DOM.js].join("\n")
+            res.send(`
+            <html>
+                <head>${head}</head>
+                <body>
+                    ${DOM.html}
+                    <style>${style}</style>
+                    <script>${script}</script>
+                </body>
+            </html>
+            `)
         }, __dirname);
     } catch (error) {
-        res.status(404).send('File not found' + getBaseJS(null, true));
+        res.status(404).send('File not found' + getBaseJS(null, true) + "<style>body{background:black;}</style>");
     }
 }
 

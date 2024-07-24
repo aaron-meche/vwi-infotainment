@@ -11,68 +11,44 @@ Import: API/TimeManager
 PageTitle: Infotainment
 PageIcon: favicon.png
 
+// TOP LEFT
+// Speed + Limit
+VStack
+    @id: SpeedDisplay
+    position: fixed
+    top: 1.15rem
+    left: 2.5rem
+    pointer-events: none
+    transition: translate 400ms
+
+    Import: Main/SpeedDisplay
+        width: fit-content
+    Import: Main/SpeedLimitDisplay
+        width: fit-content
+
 Grid
     position: fixed
-    top: 0
-    left: 0
-    height: 100vh
-    grid-row: min-content auto
-
-    // TOP LEFT
-    // Speed + Limit
-    VStack
-        Import: Main/SpeedDisplay
-            width: fit-content
-        Import: Main/SpeedLimitDisplay
-            width: fit-content
-
-    // BOTTOM LEFT
-    // Location Info
-    HStack
-        @class: snap
-        width: 20rem
-        margin: 3.5rem
-        border-radius: 1.5rem
-
-        Import: SwipeModules/Location
-            @class: BottomRightModule
-        Import: SwipeModules/Music
-            height: 100%
-            @class: BottomRightModule
-
-.BottomRightModule
-    height: fit-content
-    width: 17rem
-    margin-top: auto
-    margin-right: 1rem
-    padding: 1.5rem
-    background: [primary50]
-    backdrop-filter: blur(1.5rem)
-    border-radius: inherit
-
-// TOP RIGHT
-// Buttons
-VStack
-    position: fixed
-    top: 0
-    right: 0
-
-    Import: Buttons/TopButtons
-
-// BOTTOM RIGHT
-// Buttons
-VStack
-    position: fixed
     bottom: 0
-    right: 0
+    left: 0
+    height: 4.5rem
+    width: 100vw
+    grid-column: min-content auto min-content
+    background: [primary25]
+    backdrop-filter: blur(1.5rem)
 
-    Import: Buttons/BottomButtons
+    Import: Buttons/BottomLeft
+    // Block
+    Import: Music/SongPlayer
+    Import: Buttons/BottomRight
+
+Import: Modules/Compass
+Import: Music/Menu
 
 // BOTTOM CENTER
 // Location Info
-Block
-    position: fixed
-    bottom: 0
-    left: 50vw
+// Block
+//     position: fixed
+//     bottom: 0
+//     left: 50vw
     
-    Import: Main/LocationPill
+//     Import: Main/LocationPill

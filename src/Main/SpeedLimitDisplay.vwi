@@ -7,8 +7,9 @@
 
 
 VStack
+    @class:
     @id: SpeedLimit
-    margin: 0 3.5rem
+    margin-top: 2.5rem
     padding: 1rem
     background: rgb(255, 255, 255, 0.75)
     backdrop-filter: blur(10pt)
