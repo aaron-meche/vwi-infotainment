@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const sourcePath = path.join(__dirname, "src")
-const outputPath = path.join(__dirname, "dist")
+const outputPath = path.join(__dirname, "docs")
 const publicPath = path.join(__dirname, "public")
 
 // Copies files from srcDir to destDir
