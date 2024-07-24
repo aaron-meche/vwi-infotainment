@@ -1,0 +1,94 @@
+
+
+{
+    function getColor(colorName, opacity) {
+        const colors = {
+            "white": "255, 255, 255",
+            "black": "0, 0, 0"
+        }
+        return colors[colorName] + (opacity ? `, ${opacity}` : "")
+    }
+
+    const timeManager = {
+        dawn: () => {
+            map.setStyle(map_styles[0])
+            timeManager.mode("light")
+        },
+        day: () => {
+            map.setStyle(map_styles[1])
+            timeManager.mode("light")
+        },
+        dusk: () => {
+            map.setStyle(map_styles[2])
+            timeManager.mode("dark")
+        },
+        night: () => {
+            map.setStyle(map_styles[3])
+            timeManager.mode("dark")
+        },
+        light: {
+            primary: getColor("white"),
+            primary75: getColor("white", 0.75),
+            primary50: getColor("white", 0.5),            
+            primary25: getColor("white", 0.25),
+            content: getColor("black"),
+            content75: getColor("black", 0.75),
+            content50: getColor("black", 0.5),            
+            content25: getColor("black", 0.25),
+        },
+        dark: {
+            primary: getColor("black"),
+            primary75: getColor("black", 0.75),
+            primary50: getColor("black", 0.5),            
+            primary25: getColor("black", 0.25),
+            content: getColor("white"),
+            content75: getColor("white", 0.75),
+            content50: getColor("white", 0.5),            
+            content25: getColor("white", 0.25),
+        },
+        mode: (mode) => {
+            let obj = mode == "light" ? timeManager.light : timeManager.dark
+            Object.keys(obj).forEach(key => {
+                document.documentElement.style.setProperty("--" + key, "rgb(" + obj[key] + ")")
+            })
+        },
+    }
+
+    function updateSunTimesAPI() {
+        const url = `https://api.sunrise-sunset.org/json?lat=${store.get("position lat")}&lng=${store.get("position long")}&formatted=0`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const dawn = new Date(data.results.civil_twilight_begin);
+                const day = new Date(data.results.sunrise);
+                const dusk = new Date(data.results.civil_twilight_end);
+                const night = new Date(data.results.nautical_twilight_end);
+                const now = new Date()
+
+                if (now < dawn) {
+                    timeManager.night()
+                }
+                else if (now < day) {
+                    timeManager.dawn()
+                }
+                else if (now < dusk) {
+                    timeManager.day()
+                }
+                else if (now < night) {
+                    timeManager.dusk()
+                }
+                else {
+                    timeManager.night()
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching sun times:', error);
+            });
+    }
+}

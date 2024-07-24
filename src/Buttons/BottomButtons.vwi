@@ -1,0 +1,52 @@
+
+{
+    store.safety("speed", 0)
+    store.set("live follow", "on")
+    store.set("dimension", 3)
+
+    function toggleDimension() {
+        let dimension = store.get("dimension")
+        if (dimension == 2) {
+            map.easeTo({ pitch: 60 })
+            store.set("dimension", 3)
+        }
+        else {
+            map.easeTo({ pitch: 0, offset: [0, 0], center: [store.get("position long"), store.get("position lat")] })
+            store.set("dimension", 2)
+        }
+    }
+
+    function currentLocation() {
+        map.easeTo(standard_map_config())
+        store.set("live follow", "on")
+        store.set("dimension", 3)
+    }
+}
+
+
+
+VStack
+    padding: 2rem
+
+    Grid
+        @class: BottomMapButton
+        @onclick: toggleDimension()
+        Text: {store.get("dimension") == 2 ? "3D" : "2D"}
+    Grid
+        @class: BottomMapButton
+        @onclick: currentLocation()
+        Text: {Icon("location-dot")}
+
+
+.BottomMapButton
+    margin-top: 1rem
+    padding: 1.5rem
+    background: [primary50]
+    backdrop-filter: blur(1.5rem)
+    align-items: center
+    ratio: 1 / 1
+    size: 16pt
+    weight: 600
+    align: center
+    cursor: pointer
+    border-radius: 100vh

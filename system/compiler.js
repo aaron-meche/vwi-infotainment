@@ -1,6 +1,31 @@
 
 import path from 'path'
-import fs, { truncate } from 'fs'
+import fs from 'fs'
+
+export function getBaseJS(__dirname, liveBool) {
+    let jsArr = [
+        fs.readFileSync(path.join(__dirname, 'system/state.js'), 'utf-8'),
+        fs.readFileSync(path.join(__dirname, 'system/store.js'), 'utf-8'),
+    ];
+    if (liveBool) {
+        jsArr.push(fs.readFileSync(path.join(__dirname, 'system/live.js'), 'utf-8'));
+    }
+    return jsArr.join("\n");
+}
+
+export function getBaseHeadHTML(__dirname) {
+    let htmlArr = [
+        fs.readFileSync(path.join(__dirname, 'system/meta.html'), 'utf-8'),
+    ];
+    return htmlArr.join("\n");
+}
+
+export function getBaseCSS(__dirname) {
+    let cssArr = [
+        fs.readFileSync(path.join(__dirname, 'system/structures.css'), 'utf-8'),
+    ];
+    return cssArr.join("\n");
+}
 
 // Main compiler class
 export class View {
@@ -41,6 +66,7 @@ export class View {
         callback({
             head: this.head.join("\n"), 
             html: this.html.join("\n"), 
+            js: this.js.join("\n"),
             css: this.css.join("\n"), 
         })
     }
@@ -65,7 +91,7 @@ export class View {
                 }
                 contents.push(line)
             }
-            this.head.push("<script>" + contents.join("\n") + "</script>")
+            this.js.push(contents.join("\n"))
             this.rawLineIndex += ignoreLineCount
         }
         // Call Structure
@@ -232,6 +258,7 @@ export class View {
             new View(filecontent, resDOM => {
                 this.structures.build.struct("Import", resDOM.html, null, null, true)
                 this.head.push(resDOM.head)
+                this.js.push(resDOM.js)
                 this.css.push(resDOM.css)
             }, this.directory)
         },
@@ -271,7 +298,23 @@ export class View {
         "Span": line => { this.structures.build.text("span", null, null, "span") },
         // Other HTML Elements
         "Audio": line => { this.structures.build.struct("audio", null, null, "audio") },
-        // Text Styles
+        "PageTitle": line => {
+            const title = line.split(":")[1]?.trim();
+            this.head.push(`
+                <title>${title}</title>
+                <meta name="apple-mobile-web-app-title" content="${title}">
+                <meta name="application-name" content="${title}">
+            `)
+        },
+        "PageIcon": line => { 
+            let iconPath = line.split(":")[1]?.trim()
+            this.head.push(`
+                <link rel="apple-touch-icon" sizes="180x180" href="${iconPath}">
+                <link rel="icon" type="image/png" sizes="32x32" href="${iconPath}">
+                <link rel="icon" type="image/png" sizes="16x16" href="${iconPath}">
+            `);
+        },
+        // Text Style
         "Title": line => { this.structures.build.text("title") },
         "Subtitle": line => { this.structures.build.text("subtitle") },
         // Code Displays

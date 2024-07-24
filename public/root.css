@@ -40,23 +40,15 @@
 }
 
 :root{
-	--hue: 270;
-	--sat: 20%;
-	--strt: 12%;
-	--diff: 4%;
+    --primary: black;
+    --primary75: rgb(0, 0, 0, 0.75);
+    --primary50: rgb(0, 0, 0, 0.5);
+    --primary25: rgb(0, 0, 0, 0.25);
+    --content: white;
+    --content75: rgb(255, 255, 255, 0.75);
+    --content50: rgb(255, 255, 255, 0.5);
+    --content25: rgb(255, 255, 255, 0.25);
 
-	--accent: hsl(var(--hue), 40%, 60%);
-	--accent-transparent: hsl(var(--hue), 64%, 70%, 40%);
-	--contrast: hsl(var(--hue), var(--sat), calc(100% - var(--strt)));
-	--contrast-transparent: hsl(var(--hue), var(--sat), calc(100% - var(--strt)), 40%);
-	--bg: hsl(var(--hue), var(--sat), calc(var(--strt) + (0 * var(--diff))));
-	--bg-transparent: hsl(var(--hue), var(--sat), calc(var(--strt) + (0 * var(--diff))), 40%);
-	--pure: hsl(var(--hue), var(--sat), 0%);
-	--l1: hsl(var(--hue), var(--sat), calc(var(--strt) + (1 * var(--diff))));
-	--l2: hsl(var(--hue), var(--sat), calc(var(--strt) + (2 * var(--diff))));
-	--l3: hsl(var(--hue), var(--sat), calc(var(--strt) + (3 * var(--diff))));
-	--l4: hsl(var(--hue), var(--sat), calc(var(--strt) + (4 * var(--diff))));
-	--l5: hsl(var(--hue), var(--sat), calc(var(--strt) + (5 * var(--diff))));
     --red: hsl(0, 80%, 50%);
     --orange: hsl(30, 80%, 50%);
     --yellow: hsl(60, 80%, 40%);
@@ -68,16 +60,10 @@
 	--inline-moat: 6rem;
 }
 
-/* @media (prefers-color-scheme: light) {
-    body.light :root{
-        --strt: 92%;
-        --diff: -4%;
-    }
-} */
-
 body{
     margin: 0;
+    font-size: 14pt;
     font-family: BaileyScript;
     background: var(--bg);
-    color: var(--contrast);
+    color: var(--content);
 }

@@ -9,6 +9,60 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
     store.safety("speed", 0)
     store.safety("speed limit", 0)
 
+    const dev_locations = {
+        "Moss Bluff": () => { // LA 378 W, Moss Bluff LA
+            store.set("position lat", 30.30061)
+            store.set("position long", -93.19966)
+            store.set("heading", 270)
+        },
+        "Westlake": () => { // I-10 E, Lake Charles LA
+            store.set("position lat", 30.235925)
+            store.set("position long", -93.2)
+            store.set("heading", 90)
+        },
+        "Iowa": () => { // I-10 E, Iowa
+            store.set("position lat", 30.24895)
+            store.set("position long", -93.01808)
+            store.set("heading", 85)
+        },
+        "Shreveport": () => { // I-49 S into 220 E, Shreveport LA
+            store.set("position lat", 32.53864)
+            store.set("position long", -93.79588)
+            store.set("heading", 185)
+        }, 
+        "Rockton": () => { // Rockton Rd E, Rockton IL
+            store.set("position lat", 42.45552)
+            store.set("position long", -89.07037)
+            store.set("heading", 90)
+        }, 
+        "Milwaukee": () => { // Water St N, Milwaukee WI
+            store.set("position lat", 43.03896)
+            store.set("position long", -87.90914)
+            store.set("heading", 355)
+        },
+        "Madison": () => { // W Washington Ave N, Madison WI
+            store.set("position lat", 43.07162)
+            store.set("position long", -89.38851)
+            store.set("heading", 47)
+        },
+        "Manhattan": () => { // Park Ave N, Manhattan NY
+            store.set("position lat", 40.73995)
+            store.set("position long", -73.98648)
+            store.set("heading", 28)
+        },
+        "Dallas": () => { // I 30 E, Dallas TX
+            store.set("position lat", 32.75950)
+            store.set("position long", -97.09440)
+            store.set("heading", 90)
+        },
+        "Seattle": () => { // I 5 N, Seattle WA
+            store.set("position lat", 47.60956)
+            store.set("position long", -122.33084)
+            store.set("heading", 0)
+        },
+    }
+    // dev_locations["Westlake"]()
+
     const map_styles = [
         "mapbox://styles/aaronmeche/clyp7z96b007x01qn4rx6fmbb",
         "mapbox://styles/aaronmeche/clyp7zcxx027301p80cet1y8p",
@@ -19,10 +73,10 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
     const standard_map_config = () => {
         return {
             container: 'map',
-            style: map_styles[2],
+            style: map_styles[0],
             center: [store.get("position long"), store.get("position lat")],
             bearing: store.get("heading"),
-            offset: [0, (window.innerHeight * 0.25)],
+            offset: [0, (0.5 * window.innerHeight * (2 / 3))],
             zoom: 16,
             pitch: 60
         }
@@ -32,25 +86,25 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
 
     const el = document.createElement('div')
     el.className = "marker"
-
-    const marker = new mapboxgl.Marker(el).setLngLat([store.get("position").coords.longitude, store.get("position").coords.latitude]).addTo(map);
+ 
+    const marker = new mapboxgl.Marker(el).setLngLat([store.get("position long"), store.get("position lat")]).addTo(map);
 
     let lastPosition = null
 
-    function updateMapToLocation() {
-        map.easeTo(standard_map_config())
-    }
-
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(position => {
-            store.set("position", position)
-            store.set("position long", position.coords.longitude)
+            store.set("position", [position.coords.longitude, position.coords.latitude])
             store.set("position lat", position.coords.latitude)
-            store.set("speed", Math.floor(position.coords.speed * 2.23694) || 0)
+            store.set("position long", position.coords.longitude)
             store.set("heading", position.coords.heading || 0)
+            store.set("speed", Math.ceil(Math.floor(position.coords.speed * 2.23694) || 0))
             marker.setLngLat([store.get("position long"), store.get("position lat")])
             updateAPIs()
-            updateMapToLocation()
+
+            if (store.get("live follow") == "on") {
+                map.easeTo(standard_map_config())
+            }
+            
         }, error => {
             console.error('Error getting location: ', error);
         }, {
@@ -63,36 +117,25 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
         console.error('Geolocation is not supported by this browser.');
     }
 
-    function updateAPIs(position) {
-        const featureUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${store.get("position long")},${store.get("position lat")}.json?access_token=${mapboxgl.accessToken}`;
-        fetch(featureUrl)
-            .then(response => response.json())
-            .then(data => {
-                if (data.features && data.features.length > 0) {
-                    const features = data.features
-                    store.set("features", features)
-                    store.set("current city", features.find(feature => feature.place_type.includes("place")).text)
-                    store.set("current county", features.find(feature => feature.place_type.includes("district")).text)
-                    store.set("current state", features.find(feature => feature.place_type.includes("region")).text)
-                }
-            })
-            .catch(error => console.error('Error with features api:', error));
-        
-        const speedLimitUrl = `https://api.mapbox.com/v4/mapbox.mapbox-traffic-v1/tilequery/${store.get("position long")},${store.get("position lat")}.json?radius=100&layers=speed&access_token=${mapboxgl.accessToken}`;
-        fetch(speedLimitUrl)
-            fetch(speedLimitUrl)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data)
-                    try {
-                        const speedLimitKmh = data.features[0].properties.maxspeed
-                        const speedLimitMph = speedLimitKmh * 0.621371
-                        store.set("speed limit", Math.floor(speedLimitMph))
-                    }
-                    catch (error) { }
-                })
-                .catch(error => console.error('Error fetching speed limit data:', error));
+    function updateAPIs() {
+        // APIs
+        updateFeaturesAPI()
+        updateRoadAPI()
+        updateCurrentElevationAPI()
+        updateWeatherAPI()
+
+        // TimeManager
+        updateSunTimesAPI()
     }
+
+    function handleUserInteraction() {
+        store.set("live follow", "off")
+    }
+
+    map.on('dragstart', () => handleUserInteraction());
+    map.on('pitchstart', () => handleUserInteraction());
+    map.easeTo(standard_map_config())
+    updateAPIs()
 }
 
 Block
@@ -114,7 +157,8 @@ Block
     left: 0
     height: 1rem
     width: 1rem
-    background: [purple]
-    outline: solid 0.2rem rgb(200 200 200)
+    background: [blue]
+    outline: solid 0.1rem white
+    box-shadow: 0 0 1.5rem 0.25rem [blue]
     size: 25pt
     border-radius: 100vh

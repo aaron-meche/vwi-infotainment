@@ -1,0 +1,14 @@
+
+{
+
+}
+
+
+Text: {store.get("road name")}
+    padding: 0.5rem 2rem
+    margin-bottom: 1.25rem
+    background: [primary50]
+    backdrop-filter: blur(1.5rem)
+    weight: 500
+    border-radius: 100vh
+    translate: -50% 0

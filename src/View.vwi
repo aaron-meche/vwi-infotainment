@@ -6,40 +6,55 @@
 
 Import: Foundation
 Import: API/Map
-Import: API/ThemeSwitch
+Import: API/APIs
+Import: API/TimeManager
+PageTitle: Infotainment
+PageIcon: favicon.png
 
-// Speed
+// TOP LEFT
+// Speed + Limit
 VStack
-    position: absolute
+    position: fixed
     top: 0
     left: 0
 
-    // Import: Main/TopInfoBar
-        // width: fit-content
     Import: Main/SpeedDisplay
         width: fit-content
-
-// Speed Limit
-VStack
-    position: absolute
-    top: 0
-    right: 0
-
     Import: Main/SpeedLimitDisplay
         width: fit-content
 
-// Bottom Right Map Buttons
+// BOTTOM LEFT
+// Location Info
 VStack
-    position: absolute
-    bottom: 0
-    right: 0
-
-    Import: Buttons/Buttons
-
-// Bottom Left Location
-VStack
-    position: absolute
+    position: fixed
     bottom: 0
     left: 0
 
     Import: Location/Location
+
+// TOP RIGHT
+// Buttons
+VStack
+    position: fixed
+    top: 0
+    right: 0
+
+    Import: Buttons/TopButtons
+
+// BOTTOM RIGHT
+// Buttons
+VStack
+    position: fixed
+    bottom: 0
+    right: 0
+
+    Import: Buttons/BottomButtons
+
+// BOTTOM CENTER
+// Location Info
+Block
+    position: fixed
+    bottom: 0
+    left: 50vw
+    
+    Import: Location/LocationPill

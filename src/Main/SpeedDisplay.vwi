@@ -1,15 +1,24 @@
 
 
+// Inherited Padding
+//     1.35
+// 0        -0.6
+//     0.6
 HStack
-    padding: 1rem 3rem
+    padding: 2rem
+    padding-top: 0.65rem
+    padding-bottom: 1.4rem
+    border-radius: 0.5rem
+    line-height: 1
     align-items: baseline
-    size: 30pt
-    weight: 500
     
-    Text: {Math.floor(store.get("speed"))}
+    Text: {store.get("speed")}
         margin-right: 0.5rem
-        size: 80pt
+        size: 100pt
         weight: 700
     Text: mph
+        size: 25pt
+        weight: 500
+    // Import: Main/SpeedLimitDisplay
 
 // Text: {store.get("speed limit")} limit

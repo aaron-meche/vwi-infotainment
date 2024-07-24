@@ -4,20 +4,24 @@
 }
 
 VStack
-    margin: 3rem
-    size: 16pt
-    border-radius: 1rem
-
+    margin: 2rem
+    padding: 1.5rem
+    background: [primary50]
+    backdrop-filter: blur(1.5rem)
+    border-radius: 0.5rem
+    
     Text: {store.get("current city")}
         size: 16pt
         weight: 600
     Text: {store.get("current county")}
-        size: 14pt
         opacity: 0.9
     Text: {store.get("current state")}
-        size: 14pt
         opacity: 0.9
-    Text: {store.get("position").coords.longitude.toFixed(2)} W {store.get("position").coords.latitude.toFixed(2)} E
-        margin-top: 0.5rem    
-        size: 14pt
-        opacity: 0.75
+    Text: {Icon("mountain")} {store.get("elevation")} ft
+        margin-top: 0.5rem
+        size: 12pt
+        opacity: 0.5
+    Text: {Icon("location")} {store.get("position long").toFixed(2)}, {store.get("position lat").toFixed(2)}
+        margin-top: 0.25rem
+        size: 12pt
+        opacity: 0.5

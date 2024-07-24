@@ -1,0 +1,73 @@
+
+
+{
+    function updateFeaturesAPI() {
+        const featureUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${store.get("position long")},${store.get("position lat")}.json?access_token=${mapboxgl.accessToken}`;
+        fetch(featureUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.features && data.features.length > 0) {
+                    const features = data.features
+                    store.set("features", features)
+                    store.set("current city", features.find(feature => feature.place_type.includes("place")).text)
+                    store.set("current county", features.find(feature => feature.place_type.includes("district")).text)
+                    store.set("current state", features.find(feature => feature.place_type.includes("region")).text)
+                }
+            })
+            .catch(error => console.error('Error with features api:', error));
+    }
+
+    function updateRoadAPI() {
+        const url = `https://overpass-api.de/api/interpreter?data=[out:json];way(around:10,${store.get("position lat")},${store.get("position long")})[maxspeed];out;`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                try {
+                    store.set("speed limit", data.elements[0].tags.maxspeed.split(" ")[0])
+                    store.set("road name", data.elements[0].tags.name ? data.elements[0].tags.name.replaceAll(";", " / ") : data.elements[0].tags.ref.replaceAll(";", " / "))
+                }
+                catch (error) {
+                    store.set("road name", store.get("current city"))
+                }
+            })
+            .catch(error => {
+                return 'Error fetching speed limit'
+            });
+        }
+
+    function updateCurrentElevationAPI() {
+        const url = `https://api.open-elevation.com/api/v1/lookup?locations=${store.get("position lat")},${store.get("position long")}`;
+            
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                store.set("elevation", data.results[0].elevation)
+            })
+            .catch(error => {
+                
+            })
+    }
+
+    function updateWeatherAPI() {
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${store.get("position lat")}&lon=${store.get("position long")}&appid=1f263bb5882c1fdce34a6513a3b48025&units=metric`
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data)
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+    }
+}

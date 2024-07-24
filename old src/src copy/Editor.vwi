@@ -1,6 +1,0 @@
-
-VStack
-    height: calc(100% - 3rem)
-    padding: 1.5rem
-    
-    Text: "Text Hi"

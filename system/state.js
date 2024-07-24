@@ -6,11 +6,14 @@ window.addEventListener("DOMContentLoaded", () => {
     updateState()
 })
 
+let state_funcs = []
 function updateState() {
     buildLiveText()
     buildEachStacks()
     buildCustomStructs()
+    state_funcs.forEach(func => func())
 }
+
 
 let live_state = []
 function processLiveText() {
