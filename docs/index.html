@@ -562,7 +562,7 @@ store.set("position long", -122.33084)
 store.set("heading", 0)
 },
 }
-dev_locations["Milwaukee"]()
+// dev_locations["Milwaukee"]()
 
 const map_styles = [
 "mapbox://styles/aaronmeche/clyp7z96b007x01qn4rx6fmbb",
@@ -595,9 +595,9 @@ let lastPosition = null
 
 if (navigator.geolocation) {
 navigator.geolocation.watchPosition(position => {
-// store.set("position lat", position.coords.latitude)
-// store.set("position long", position.coords.longitude)
-// store.set("heading", position.coords.heading || 0)
+store.set("position lat", position.coords.latitude)
+store.set("position long", position.coords.longitude)
+store.set("heading", position.coords.heading || 0)
 store.set("speed", Math.ceil(Math.floor(position.coords.speed * 2.23694) || 0))
 marker.setLngLat([store.get("position long"), store.get("position lat")])
 updateAPIs()
