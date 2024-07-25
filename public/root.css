@@ -55,20 +55,20 @@
     --primary250: black;
     --primary225: black;
 
-    --content: black;
-    --content75: black;
-    --content50: black;
-    --content25: black;
+    --content: white;
+    --content75: white;
+    --content50: white;
+    --content25: white;
 
-    --content1: black;
-    --content175: black;
-    --content150: black;
-    --content125: black;
+    --content1: white;
+    --content175: white;
+    --content150: white;
+    --content125: white;
 
-    --content2: black;
-    --content275: black;
-    --content250: black;
-    --content225: black;
+    --content2: white;
+    --content275: white;
+    --content250: white;
+    --content225: white;
 
     --red: hsl(0, 80%, 50%);
     --orange: hsl(30, 80%, 50%);

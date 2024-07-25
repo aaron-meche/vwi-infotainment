@@ -1,22 +1,21 @@
 
 
 {
-    // getColor "light", "primary", 1, 12, 0
-    function getColor(mode, type, opacity = 1, delta, count) {
-        const baseColors = {
-            "light": {
-                "primary": [0, 0, 100],
-                "content": [0, 0, 0]
-            },
-            "dark": {
-                "primary": [0, 0, 0],
-                "content": [0, 0, 100]
-            }
+    function buildColorSet(mode, tiers, levels) {
+        let colorTypes = ["primary", "content"]
+
+        for (let i = 0; i < tiers; i++) {
+            levels.forEach(level => {
+                colorTypes.forEach(colorType => {
+                    let primaryLight = mode == "light" ? 100 : 0
+                    let contentLight = mode == "light" ? 0 : 100
+                    let lightness = colorType == "primary" ? primaryLight : contentLight
+                    let varName = `--${colorType}${i > 0 ? i : ""}${level < 1 ? 100 * level : ""}`
+                    let varValue = `hsl(0, 0%, ${lightness}%, ${level})`
+                    document.documentElement.style.setProperty(varName, varValue)
+                })
+            })
         }
-        let rgbVal = [baseColors[mode][type]]
-        rgbVal[0][2] = Math.abs(rgbVal[0][2] - (delta * count))
-        rgbVal.push(opacity)
-        return `hsl(${rgbVal.join(",")})`
     }
 
     const timeManager = {
@@ -37,40 +36,7 @@
             timeManager.mode("dark")
         },
         mode: (mode) => {
-            function createColor(type, delta = 0, count = 0) {
-                let colors = []
-                let levels = [0.25, 0.5, 0.75, 1]
-                levels.forEach(level => {
-                    colors.push([type + (count > 0 ? count : "") + (level == 1 ? "" : level * 100), getColor(mode, type, level, delta, count)])
-                })
-                return colors
-            }
-
-            let color_delta = 8
-
-            let colors = [
-                ...createColor("primary", color_delta, 0), 
-                ...createColor("primary", color_delta, 1), 
-                ...createColor("primary", color_delta, 2), 
-                ...createColor("primary", color_delta, 3), 
-                ...createColor("primary", color_delta, 4), 
-                
-                ...createColor("content", color_delta, 0),
-                ...createColor("content", color_delta, 1),
-                ...createColor("content", color_delta, 2),
-                ...createColor("content", color_delta, 3),
-                ...createColor("content", color_delta, 4),
-            ]
-            console.log(colors)
-
-            colors.forEach(color => {
-                document.documentElement.style.setProperty("--" + color[0], color[1])
-            })
-
-            // let obj = mode == "light" ? timeManager.light : timeManager.dark
-            // Object.keys(obj).forEach(key => {
-            //     document.documentElement.style.setProperty("--" + key, "rgb(" + obj[key] + ")")
-            // })
+            buildColorSet(mode, 3, [0.25, 0.5, 0.75, 1])
         },
     }
 

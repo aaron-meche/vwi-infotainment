@@ -1,6 +1,7 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name ="viewport" content="initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="https://kit.fontawesome.com/5cf062dc93.js"></script>
 <script  src="script.js"></script>
 <link rel="stylesheet" href="main.css">
@@ -89,7 +90,7 @@
 </div>
 </div>
 <div   ui="Import">
-<div id='MusicMenu' style="position:fixed;top:1.5rem;left:-33.5vw;height:calc(100vh - 7.5rem);width:32vw;background:var(--primary25);backdrop-filter:blur(1.5rem);border-radius:0.75rem;translate:35vw 0;transition:translate 350ms;"  ui="block">
+<div id='MusicMenu' style="position:fixed;top:1.5rem;left:-33.5vw;height:calc(100vh - 7.5rem);width:32vw;background:var(--primary25);backdrop-filter:blur(1.5rem);border-radius:0.75rem;transition:translate 350ms;"  ui="block">
 <div   ui="Import">
 <div style="grid-template-columns:repeat(auto-fit, minmax(1rem, 1fr));gap:1.5rem;padding:1.5rem;text-align:center;"  ui="grid">
 <div class='MusicMenuTopButton'   ui="v-stack">
@@ -244,7 +245,7 @@ scroll-snap-align: start;
 
 
 .BottomMapButton { height:100%;display:flex;align-items:center;padding:0 2rem; }
-.MusicMenuTopButton { padding:1rem 0;background:var(--primary225);font-weight:500;backdrop-filter:blur(0.75rem);border-radius:0.75rem; }</style><script>
+.MusicMenuTopButton { padding:1rem 0;background:var(--primary125);font-weight:500;backdrop-filter:blur(0.75rem);border-radius:0.75rem; }</style><script>
 
 window.addEventListener("DOMContentLoaded", () => {
     processCustomStructs()
@@ -691,22 +692,21 @@ store.set("elevation", data.results[0].elevation)
 
 })
 }
-// getColor "light", "primary", 1, 12, 0
-function getColor(mode, type, opacity = 1, delta, count) {
-const baseColors = {
-"light": {
-"primary": [0, 0, 100],
-"content": [0, 0, 0]
-},
-"dark": {
-"primary": [0, 0, 0],
-"content": [0, 0, 100]
+function buildColorSet(mode, tiers, levels) {
+let colorTypes = ["primary", "content"]
+
+for (let i = 0; i < tiers; i++) {
+levels.forEach(level => {
+colorTypes.forEach(colorType => {
+let primaryLight = mode == "light" ? 100 : 0
+let contentLight = mode == "light" ? 0 : 100
+let lightness = colorType == "primary" ? primaryLight : contentLight
+let varName = `--${colorType}${i > 0 ? i : ""}${level < 1 ? 100 * level : ""}`
+let varValue = `hsl(0, 0%, ${lightness}%, ${level})`
+document.documentElement.style.setProperty(varName, varValue)
+})
+})
 }
-}
-let rgbVal = [baseColors[mode][type]]
-rgbVal[0][2] = Math.abs(rgbVal[0][2] - (delta * count))
-rgbVal.push(opacity)
-return `hsl(${rgbVal.join(",")})`
 }
 
 const timeManager = {
@@ -727,40 +727,7 @@ map.setStyle(map_styles[3])
 timeManager.mode("dark")
 },
 mode: (mode) => {
-function createColor(type, delta = 0, count = 0) {
-let colors = []
-let levels = [0.25, 0.5, 0.75, 1]
-levels.forEach(level => {
-colors.push([type + (count > 0 ? count : "") + (level == 1 ? "" : level * 100), getColor(mode, type, level, delta, count)])
-})
-return colors
-}
-
-let color_delta = 8
-
-let colors = [
-...createColor("primary", color_delta, 0),
-...createColor("primary", color_delta, 1),
-...createColor("primary", color_delta, 2),
-...createColor("primary", color_delta, 3),
-...createColor("primary", color_delta, 4),
-
-...createColor("content", color_delta, 0),
-...createColor("content", color_delta, 1),
-...createColor("content", color_delta, 2),
-...createColor("content", color_delta, 3),
-...createColor("content", color_delta, 4),
-]
-console.log(colors)
-
-colors.forEach(color => {
-document.documentElement.style.setProperty("--" + color[0], color[1])
-})
-
-// let obj = mode == "light" ? timeManager.light : timeManager.dark
-// Object.keys(obj).forEach(key => {
-//     document.documentElement.style.setProperty("--" + key, "rgb(" + obj[key] + ")")
-// })
+buildColorSet(mode, 3, [0.25, 0.5, 0.75, 1])
 },
 }
 
