@@ -41,13 +41,34 @@
 
 :root{
     --primary: black;
-    --primary75: rgb(0, 0, 0, 0.75);
-    --primary50: rgb(0, 0, 0, 0.5);
-    --primary25: rgb(0, 0, 0, 0.25);
-    --content: white;
-    --content75: rgb(255, 255, 255, 0.75);
-    --content50: rgb(255, 255, 255, 0.5);
-    --content25: rgb(255, 255, 255, 0.25);
+    --primary75: black;
+    --primary50: black;
+    --primary25: black;
+
+    --primary1: black;
+    --primary175: black;
+    --primary150: black;
+    --primary125: black;
+
+    --primary2: black;
+    --primary275: black;
+    --primary250: black;
+    --primary225: black;
+
+    --content: black;
+    --content75: black;
+    --content50: black;
+    --content25: black;
+
+    --content1: black;
+    --content175: black;
+    --content150: black;
+    --content125: black;
+
+    --content2: black;
+    --content275: black;
+    --content250: black;
+    --content225: black;
 
     --red: hsl(0, 80%, 50%);
     --orange: hsl(30, 80%, 50%);

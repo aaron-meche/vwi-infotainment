@@ -1,0 +1,32 @@
+
+
+
+{
+
+
+}
+
+
+Grid
+    grid-column: repeat(auto-fit, minmax(1rem, 1fr))
+    gap: 1.5rem
+    padding: 1.5rem
+    align: center
+
+    VStack
+        @class: MusicMenuTopButton
+        Text: {Icon("play")}
+            margin-bottom: 0.375rem
+        Text: Play
+    VStack
+        @class: MusicMenuTopButton
+        Text: {Icon("list")}
+            margin-bottom: 0.375rem
+        Text: List
+
+.MusicMenuTopButton
+    padding: 1rem 0
+    background: [primary225]
+    weight: 500
+    backdrop-filter: blur(0.75rem)
+    border-radius: 0.75rem

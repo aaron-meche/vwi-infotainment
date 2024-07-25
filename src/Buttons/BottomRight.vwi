@@ -4,6 +4,10 @@
     store.set("live follow", "on")
     store.set("dimension", 3)
 
+    function directNorth() {
+        map.easeTo({ bearing: 0 })
+    }
+
     function toggleDimension() {
         let dimension = store.get("dimension")
         if (dimension == 2) {
@@ -30,11 +34,15 @@ HStack
     align-items: center
     margin: 0 2rem
 
+    Text: N^
+        @class: BottomMapButton
+        @onclick: directNorth()
+        weight: 500
     Text: {store.get("dimension") == 2 ? "3D" : "2D"}
         @class: BottomMapButton
         @onclick: toggleDimension()
         weight: 500
-    Text: {Icon("location-dot")}
+    Text: {Icon("location-arrow")}
         @class: BottomMapButton
         @onclick: currentLocation()
 

@@ -125,7 +125,6 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
         updateFeaturesAPI()
         updateRoadAPI()
         updateCurrentElevationAPI()
-        updateWeatherAPI()
 
         // TimeManager
         updateSunTimesAPI()

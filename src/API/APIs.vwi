@@ -53,21 +53,4 @@
                 
             })
     }
-
-    function updateWeatherAPI() {
-        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${store.get("position lat")}&lon=${store.get("position long")}&appid=1f263bb5882c1fdce34a6513a3b48025&units=metric`
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok ' + response.statusText);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data)
-            })
-            .catch(error => {
-                console.error('There has been a problem with your fetch operation:', error);
-            });
-    }
 }

@@ -19,7 +19,7 @@ VStack
     top: 1.15rem
     left: 2.5rem
     pointer-events: none
-    transition: translate 400ms
+    transition: translate 350ms
 
     Import: Main/SpeedDisplay
         width: fit-content
@@ -41,7 +41,6 @@ Grid
     Import: Music/SongPlayer
     Import: Buttons/BottomRight
 
-Import: Modules/Compass
 Import: Music/Menu
 
 // BOTTOM CENTER

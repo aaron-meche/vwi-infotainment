@@ -7,7 +7,8 @@
     function openMusicMenu() {
         const menu = document.getElementById("MusicMenu")
         const speedDisplay = document.getElementById("SpeedDisplay")
-        menu.style.left = "0"
+        
+        menu.style.translate = "35vw 0"
         speedDisplay.style.translate = "35vw 0"
         menuWidthOffset = window.innerWidth * 0.175
         map.easeTo(standard_map_config())
@@ -16,9 +17,10 @@
     function closeMusicMenu() {
         const menu = document.getElementById("MusicMenu")
         const speedDisplay = document.getElementById("SpeedDisplay")
-        menu.style.left = "-35vw"
-        menuWidthOffset = 0
+
+        menu.style.translate = "0 0"
         speedDisplay.style.translate = "0 0"
+        menuWidthOffset = 0
         map.easeTo(standard_map_config())
     }
 
@@ -39,14 +41,17 @@
 Wrapper
     @id: MusicMenu
     position: fixed
-    top: 0
-    left: 0vw
-    height: calc(100vh - 4.5rem)
-    width: 35vw
-    background: [primary50]
+    top: 1.5rem
+    left: -33.5vw
+    height: calc(100vh - 7.5rem)
+    width: 32vw
+    background: [primary25]
     backdrop-filter: blur(1.5rem)
-    transition: left 400ms
+    border-radius: 0.75rem
+    translate: 35vw 0
+    transition: translate 350ms
 
+    Import: Music/TopBar
 
 
 
