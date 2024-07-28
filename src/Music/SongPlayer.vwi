@@ -32,7 +32,7 @@
         // Player is ready
         console.log('YouTube Player is ready.');
         // Example usage: Play a song once the player is ready
-        searchAndPlay('Bohemian Rhapsody');
+        // searchAndPlay('Bohemian Rhapsody');
     }
 
     function searchAndPlay(song) {

@@ -91,22 +91,31 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
     const marker = new mapboxgl.Marker(el).setLngLat([store.get("position long"), store.get("position lat")]).addTo(map);
 
     let lastPosition = null
+    let targetPosition = { lat: store.get("position lat"), lng: store.get("position long") }
+    let currentAnimationFrame = null
 
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(position => {
-            store.set("position lat", position.coords.latitude)
-            store.set("position long", position.coords.longitude)
-            store.set("heading", position.coords.heading || 0)
-            store.set("speed", Math.ceil(Math.floor(position.coords.speed * 2.23694) || 0))
-            marker.setLngLat([store.get("position long"), store.get("position lat")])
-            updateAPIs()
+            const newLat = position.coords.latitude;
+            const newLng = position.coords.longitude;
+            const latDiff = Math.abs(newLat - store.get("position lat"));
+            const lngDiff = Math.abs(newLng - store.get("position long"));
+            const threshold = 0.0001;
 
-            if (store.get("live follow") == "on") {
-                map.easeTo({
-                    ...standard_map_config(),
-                    duration: 400
-                });
+            if (latDiff > threshold || lngDiff > threshold) {
+                store.set("position lat", position.coords.latitude)
+                store.set("position long", position.coords.longitude)
+                store.set("heading", position.coords.heading || 0)
+                store.set("speed", Math.ceil(Math.floor(position.coords.speed * 2.23694) || 0))
+                targetPosition.lat = position.coords.latitude;
+                targetPosition.lng = position.coords.longitude;
+                updateAPIs()
+
+                if (store.get("live follow") == "on") {
+                    animateToPosition()
+                }
             }
+
             
         }, error => {
             console.error('Error getting location: ', error);
@@ -138,6 +147,44 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
     map.on('pitchstart', () => handleUserInteraction());
     map.easeTo(standard_map_config())
     updateAPIs()
+
+    function animateToPosition() {
+        if (currentAnimationFrame) {
+            cancelAnimationFrame(currentAnimationFrame);
+        }
+        const duration = 1000; // 1 second
+        const startTime = performance.now();
+        const startPosition = {
+            lat: store.get("position lat"),
+            lng: store.get("position long")
+        };
+
+        function animate(time) {
+            const elapsed = time - startTime;
+            const t = Math.min(elapsed / duration, 1); // Calculate the progress ratio
+            const currentLat = startPosition.lat + (targetPosition.lat - startPosition.lat) * t;
+            const currentLng = startPosition.lng + (targetPosition.lng - startPosition.lng) * t;
+            marker.setLngLat([currentLng, currentLat]);
+            if (store.get("live follow") == "on") {
+                map.easeTo({
+                    center: [currentLng, currentLat],
+                    bearing: store.get("heading"),
+                    duration: 0, // No additional duration for the map easing
+                    offset: [menuWidthOffset, window.innerHeight * 0.35],
+                    zoom: 15,
+                    pitch: 64.5
+                });
+            }
+            if (t < 1) {
+                currentAnimationFrame = requestAnimationFrame(animate);
+            } else {
+                store.set("position lat", targetPosition.lat);
+                store.set("position long", targetPosition.lng);
+            }
+        }
+
+        currentAnimationFrame = requestAnimationFrame(animate);
+    }
 }
 
 Block

@@ -1,0 +1,118 @@
+
+
+
+
+{
+    let audioContext;
+    let source;
+
+    async function fetchMdatFile(url) {
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    return arrayBuffer;
+    }
+
+    function parseMdatFile(arrayBuffer) {
+    const dataView = new DataView(arrayBuffer);
+    const floatArray = [];
+    let offset = 0;
+
+    // Read data from the array buffer
+    while (offset < dataView.byteLength) {
+        try {
+        const value = dataView.getFloat32(offset, true);
+        floatArray.push(value);
+        offset += 4;
+        } catch (error) {
+        console.error('Error reading float data at offset', offset, error);
+        break;
+        }
+    }
+
+    return floatArray;
+    }
+
+    function filterAudioSamples(floatArray) {
+    // Retain only values within the typical audio sample range
+    return floatArray.filter(value => -1.0 <= value && value <= 1.0);
+    }
+
+    function generateInverseSoundWave(data) {
+    const inverseData = new Float32Array(data.length);
+    for (let i = 0; i < data.length; i++) {
+        inverseData[i] = -data[i];
+    }
+    return inverseData;
+    }
+
+    async function playInverseSound(url) {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    try {
+        const mdatData = await fetchMdatFile(url);
+        const floatData = parseMdatFile(mdatData);
+        const audioSamples = filterAudioSamples(floatData);
+
+        console.log('Filtered audio samples:', audioSamples);
+
+        // Generate the inverse sound wave
+        const inverseData = generateInverseSoundWave(audioSamples);
+
+        // Create a buffer and fill it with the inverse sound wave
+        const sampleRate = 44100; // Set this to the correct sample rate if known
+        const inverseBuffer = audioContext.createBuffer(1, inverseData.length, sampleRate);
+        inverseBuffer.copyToChannel(inverseData, 0);
+
+        // Create a buffer source and play the inverse sound
+        source = audioContext.createBufferSource();
+        source.buffer = inverseBuffer;
+        source.connect(audioContext.destination);
+        source.loop = true; // Enable looping if continuous playback is desired
+        source.start();
+    } catch (error) {
+        console.error('Error processing audio data:', error);
+    }
+    }
+
+    function stopInverseSound() {
+    if (source) {
+        source.stop();
+        source.disconnect();
+        source = null;
+    }
+    }
+
+    function toggleAnc() {
+        if (store.get("anc") == "on") {
+            store.set("anc", "off");
+            stopInverseSound();
+        } else {
+            store.set("anc", "on");
+            playInverseSound('assets/idle.mdat'); // Update with the correct path to the .mdat file
+        }
+    }
+}
+
+
+HStack
+    padding: 0.375rem
+    background: [primary25]
+    border-radius: 100rem
+
+    Text: Off
+        @id: ANCOff
+        @class: ANCToggle active
+        @onclick: toggleAnc()
+    Text: ANC
+        @id: ANCOn
+        @class: ANCToggle
+        @onclick: toggleAnc()
+        
+.ANCToggle
+    padding: 0.375rem 1.5rem
+    cursor: pointer
+.ANCToggle.active
+    background: [primary25]
+    weight: 500
+    border-radius: 100rem

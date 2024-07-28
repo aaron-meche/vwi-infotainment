@@ -60,9 +60,7 @@
 </div>
 <div style="position:fixed;bottom:0;left:0;height:4.5rem;width:100vw;grid-template-columns:min-content auto min-content;background:var(--primary25);backdrop-filter:blur(1.5rem);"  ui="grid">
 <div   ui="Import">
-<div style="height:100%;align-items:center;"  ui="h-stack">
-<div onclick='toggleMusicMenu()' style="height:100%;display:flex;align-items:center;padding:0 2rem;" ui="text" live='true' >{Icon("bars")}
-</div>
+<div style="height:100%;align-items:center;padding:0 2.25rem;"  ui="h-stack">
 <div   ui="v-stack">
 <div style="font-weight:600;" ui="text" live='true' >{store.get("current city")}
 </div>
@@ -89,21 +87,14 @@
 </div>
 </div>
 </div>
+<div style="position:fixed;bottom:6rem;left:1.5rem;"  ui="block">
 <div   ui="Import">
-<div id='MusicMenu' style="position:fixed;top:1.5rem;left:-33.5vw;height:calc(100vh - 7.5rem);width:32vw;background:var(--primary25);backdrop-filter:blur(1.5rem);border-radius:0.75rem;transition:translate 350ms;"  ui="block">
-<div   ui="Import">
-<div style="grid-template-columns:repeat(auto-fit, minmax(1rem, 1fr));gap:1.5rem;padding:1.5rem;text-align:center;"  ui="grid">
-<div class='MusicMenuTopButton'   ui="v-stack">
-<div style="margin-bottom:0.375rem;" ui="text" live='true' >{Icon("play")}
+<div style="background:url('albums/Voicenotes/cover.png') center center no-repeat;background-size:cover;border-radius:0.75rem;overflow:hidden;"  ui="v-stack">
+<img onclick='playMusic()' style="height:12.5rem;width:12.5rem;background:var(--primary75);" src='albums/Voicenotes/cover.png'>
+<div style="padding:1rem;background:var(--primary50);backdrop-filter:blur(1.5rem);line-height:1;"  ui="v-stack">
+<div style="margin-bottom:0.25rem;font-weight:600;" ui="text">The Way I Am
 </div>
-<div  ui="text">Play
-</div>
-</div>
-<div class='MusicMenuTopButton'   ui="v-stack">
-<div style="margin-bottom:0.375rem;" ui="text" live='true' >{Icon("list")}
-</div>
-<div  ui="text">List
-</div>
+<div style="font-size:12pt;font-weight:500;opacity:0.75;" ui="text">Charlie Puth
 </div>
 </div>
 </div>
@@ -245,7 +236,7 @@ scroll-snap-align: start;
 
 
 .BottomMapButton { height:100%;display:flex;align-items:center;padding:0 2rem; }
-.MusicMenuTopButton { padding:1rem 0;background:var(--primary125);font-weight:500;backdrop-filter:blur(0.75rem);border-radius:0.75rem; }</style><script>
+</style><script>
 
 window.addEventListener("DOMContentLoaded", () => {
     processCustomStructs()
@@ -593,22 +584,31 @@ el.className = "marker"
 const marker = new mapboxgl.Marker(el).setLngLat([store.get("position long"), store.get("position lat")]).addTo(map);
 
 let lastPosition = null
+let targetPosition = { lat: store.get("position lat"), lng: store.get("position long") }
+let currentAnimationFrame = null
 
 if (navigator.geolocation) {
 navigator.geolocation.watchPosition(position => {
+const newLat = position.coords.latitude;
+const newLng = position.coords.longitude;
+const latDiff = Math.abs(newLat - store.get("position lat"));
+const lngDiff = Math.abs(newLng - store.get("position long"));
+const threshold = 0.0001;
+
+if (latDiff > threshold || lngDiff > threshold) {
 store.set("position lat", position.coords.latitude)
 store.set("position long", position.coords.longitude)
 store.set("heading", position.coords.heading || 0)
 store.set("speed", Math.ceil(Math.floor(position.coords.speed * 2.23694) || 0))
-marker.setLngLat([store.get("position long"), store.get("position lat")])
+targetPosition.lat = position.coords.latitude;
+targetPosition.lng = position.coords.longitude;
 updateAPIs()
 
 if (store.get("live follow") == "on") {
-map.easeTo({
-...standard_map_config(),
-duration: 400
-});
+animateToPosition()
 }
+}
+
 
 }, error => {
 console.error('Error getting location: ', error);
@@ -640,6 +640,44 @@ map.on('dragstart', () => handleUserInteraction());
 map.on('pitchstart', () => handleUserInteraction());
 map.easeTo(standard_map_config())
 updateAPIs()
+
+function animateToPosition() {
+if (currentAnimationFrame) {
+cancelAnimationFrame(currentAnimationFrame);
+}
+const duration = 1000; // 1 second
+const startTime = performance.now();
+const startPosition = {
+lat: store.get("position lat"),
+lng: store.get("position long")
+};
+
+function animate(time) {
+const elapsed = time - startTime;
+const t = Math.min(elapsed / duration, 1); // Calculate the progress ratio
+const currentLat = startPosition.lat + (targetPosition.lat - startPosition.lat) * t;
+const currentLng = startPosition.lng + (targetPosition.lng - startPosition.lng) * t;
+marker.setLngLat([currentLng, currentLat]);
+if (store.get("live follow") == "on") {
+map.easeTo({
+center: [currentLng, currentLat],
+bearing: store.get("heading"),
+duration: 0, // No additional duration for the map easing
+offset: [menuWidthOffset, window.innerHeight * 0.35],
+zoom: 15,
+pitch: 64.5
+});
+}
+if (t < 1) {
+currentAnimationFrame = requestAnimationFrame(animate);
+} else {
+store.set("position lat", targetPosition.lat);
+store.set("position long", targetPosition.lng);
+}
+}
+
+currentAnimationFrame = requestAnimationFrame(animate);
+}
 function updateFeaturesAPI() {
 const featureUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${store.get("position long")},${store.get("position lat")}.json?access_token=${mapboxgl.accessToken}`;
 fetch(featureUrl)
@@ -805,7 +843,7 @@ function onPlayerReady(event) {
 // Player is ready
 console.log('YouTube Player is ready.');
 // Example usage: Play a song once the player is ready
-searchAndPlay('Bohemian Rhapsody');
+// searchAndPlay('Bohemian Rhapsody');
 }
 
 function searchAndPlay(song) {
@@ -862,38 +900,56 @@ map.easeTo(standard_map_config())
 store.set("live follow", "on")
 store.set("dimension", 3)
 }
-store.set("music menu", "opened")
 
-function openMusicMenu() {
-const menu = document.getElementById("MusicMenu")
-const speedDisplay = document.getElementById("SpeedDisplay")
 
-menu.style.translate = "35vw 0"
-speedDisplay.style.translate = "35vw 0"
-menuWidthOffset = window.innerWidth * 0.175
-map.easeTo(standard_map_config())
+async function playMusic() {
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+// const url = 'albums/Voicenotes/The Way I Am.mp3';
+const url = 'albums/Ctrl/Garden.mp3';
+
+try {
+// Fetch the audio file
+const response = await fetch(url);
+const arrayBuffer = await response.arrayBuffer();
+
+// Decode the audio data
+const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+// Create a buffer source node
+const source = audioContext.createBufferSource();
+source.buffer = audioBuffer;
+
+// Create a PannerNode
+const panner = audioContext.createPanner();
+panner.panningModel = 'HRTF'; // Use HRTF for spatial audio
+panner.distanceModel = 'inverse';
+panner.refDistance = 1;
+panner.maxDistance = 10000;
+panner.rolloffFactor = 1;
+panner.coneInnerAngle = 360;
+panner.coneOuterAngle = 0;
+panner.coneOuterGain = 0;
+panner.positionX.setValueAtTime(0, audioContext.currentTime);
+panner.positionY.setValueAtTime(0, audioContext.currentTime);
+panner.positionZ.setValueAtTime(0, audioContext.currentTime);
+
+// Connect the nodes
+source.connect(panner);
+panner.connect(audioContext.destination);
+
+// Start playing the audio
+source.start();
+
+console.log('Playback started with HRTF');
+} catch (error) {
+console.error('Error playing audio:', error);
+}
+}
+
+function expandMusicMenu() {
+
 }
 
 function closeMusicMenu() {
-const menu = document.getElementById("MusicMenu")
-const speedDisplay = document.getElementById("SpeedDisplay")
 
-menu.style.translate = "0 0"
-speedDisplay.style.translate = "0 0"
-menuWidthOffset = 0
-map.easeTo(standard_map_config())
-}
-
-function toggleMusicMenu() {
-if (store.get("music menu") == "closed") {
-openMusicMenu()
-store.set("music menu", "opened")
-}
-else {
-closeMusicMenu()
-store.set("music menu", "closed")
-}
-}
-
-
-</script>
+}</script>

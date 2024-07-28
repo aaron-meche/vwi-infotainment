@@ -1,57 +1,84 @@
 
-
-
 {
-    store.set("music menu", "opened")
+    
 
-    function openMusicMenu() {
-        const menu = document.getElementById("MusicMenu")
-        const speedDisplay = document.getElementById("SpeedDisplay")
-        
-        menu.style.translate = "35vw 0"
-        speedDisplay.style.translate = "35vw 0"
-        menuWidthOffset = window.innerWidth * 0.175
-        map.easeTo(standard_map_config())
+    async function playMusic() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        // const url = 'albums/Voicenotes/The Way I Am.mp3';
+        const url = 'albums/Ctrl/Garden.mp3';
+
+        try {
+            // Fetch the audio file
+            const response = await fetch(url);
+            const arrayBuffer = await response.arrayBuffer();
+
+            // Decode the audio data
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+            // Create a buffer source node
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+
+            // Create a PannerNode
+            const panner = audioContext.createPanner();
+            panner.panningModel = 'HRTF'; // Use HRTF for spatial audio
+            panner.distanceModel = 'inverse';
+            panner.refDistance = 1;
+            panner.maxDistance = 10000;
+            panner.rolloffFactor = 1;
+            panner.coneInnerAngle = 360;
+            panner.coneOuterAngle = 0;
+            panner.coneOuterGain = 0;
+            panner.positionX.setValueAtTime(0, audioContext.currentTime);
+            panner.positionY.setValueAtTime(0, audioContext.currentTime);
+            panner.positionZ.setValueAtTime(0, audioContext.currentTime);
+
+            // Connect the nodes
+            source.connect(panner);
+            panner.connect(audioContext.destination);
+
+            // Start playing the audio
+            source.start();
+
+            console.log('Playback started with HRTF');
+        } catch (error) {
+            console.error('Error playing audio:', error);
+        }
+    }
+
+    function expandMusicMenu() {
+
     }
 
     function closeMusicMenu() {
-        const menu = document.getElementById("MusicMenu")
-        const speedDisplay = document.getElementById("SpeedDisplay")
-
-        menu.style.translate = "0 0"
-        speedDisplay.style.translate = "0 0"
-        menuWidthOffset = 0
-        map.easeTo(standard_map_config())
+        
     }
-
-    function toggleMusicMenu() {
-        if (store.get("music menu") == "closed") {
-            openMusicMenu()
-            store.set("music menu", "opened")
-        }
-        else {
-            closeMusicMenu()
-            store.set("music menu", "closed")
-        }
-    }
-
 }
 
 
-Wrapper
-    @id: MusicMenu
-    position: fixed
-    top: 1.5rem
-    left: -33.5vw
-    height: calc(100vh - 7.5rem)
-    width: 32vw
-    background: [primary25]
-    backdrop-filter: blur(1.5rem)
+
+VStack
+    background: url('albums/Voicenotes/cover.png') center center no-repeat
+    background-size: cover
     border-radius: 0.75rem
-    // translate: 35vw 0
-    transition: translate 350ms
+    overflow: hidden
 
-    Import: Music/TopBar
+    Image: albums/Voicenotes/cover.png
+        @onclick: playMusic()
+        height: 12.5rem
+        width: 12.5rem
+        background: [primary75]
+    
+    VStack
+        padding: 1rem
+        background: [primary50]
+        backdrop-filter: blur(1.5rem)
+        line-height: 1
 
-
-
+        Text: The Way I Am
+            margin-bottom: 0.25rem
+            weight: 600
+        Text: Charlie Puth
+            size: 12pt
+            weight: 500
+            opacity: 0.75

@@ -287,7 +287,7 @@ export class View {
         },
         // General HTML Elements
         "Image": line => {
-            this.html.push(`<img ${this.gatherAttributes(true)} src='./static/${evalString(line.split(":")[1].trim())}'>`)
+            this.html.push(`<img ${this.gatherAttributes(true)} src='${evalString(line.split(":")[1].trim())}'>`)
         },
         // Blocks
         "Block": line => { this.structures.build.struct("block") },
