@@ -24,7 +24,6 @@
 
 
 
-
 <div   ui="Import">
 
 </div>
@@ -83,19 +82,6 @@
 <div class='BottomMapButton' onclick='toggleDimension()' style="font-weight:500;" ui="text" live='true' >{store.get("dimension") == 2 ? "3D" : "2D"}
 </div>
 <div class='BottomMapButton' onclick='currentLocation()'  ui="text" live='true' >{Icon("location-arrow")}
-</div>
-</div>
-</div>
-</div>
-<div style="position:fixed;bottom:6rem;left:1.5rem;"  ui="block">
-<div   ui="Import">
-<div style="background:url('albums/Voicenotes/cover.png') center center no-repeat;background-size:cover;border-radius:0.75rem;overflow:hidden;"  ui="v-stack">
-<img onclick='playMusic()' style="height:12.5rem;width:12.5rem;background:var(--primary75);" src='albums/Voicenotes/cover.png'>
-<div style="padding:1rem;background:var(--primary50);backdrop-filter:blur(1.5rem);line-height:1;"  ui="v-stack">
-<div style="margin-bottom:0.25rem;font-weight:600;" ui="text">The Way I Am
-</div>
-<div style="font-size:12pt;font-weight:500;opacity:0.75;" ui="text">Charlie Puth
-</div>
 </div>
 </div>
 </div>
@@ -235,8 +221,7 @@ scroll-snap-align: start;
 
 
 
-.BottomMapButton { height:100%;display:flex;align-items:center;padding:0 2rem; }
-</style><script>
+.BottomMapButton { height:100%;display:flex;align-items:center;padding:0 2rem; }</style><script>
 
 window.addEventListener("DOMContentLoaded", () => {
     processCustomStructs()
@@ -899,57 +884,4 @@ function currentLocation() {
 map.easeTo(standard_map_config())
 store.set("live follow", "on")
 store.set("dimension", 3)
-}
-
-
-async function playMusic() {
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-// const url = 'albums/Voicenotes/The Way I Am.mp3';
-const url = 'albums/Ctrl/Garden.mp3';
-
-try {
-// Fetch the audio file
-const response = await fetch(url);
-const arrayBuffer = await response.arrayBuffer();
-
-// Decode the audio data
-const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
-// Create a buffer source node
-const source = audioContext.createBufferSource();
-source.buffer = audioBuffer;
-
-// Create a PannerNode
-const panner = audioContext.createPanner();
-panner.panningModel = 'HRTF'; // Use HRTF for spatial audio
-panner.distanceModel = 'inverse';
-panner.refDistance = 1;
-panner.maxDistance = 10000;
-panner.rolloffFactor = 1;
-panner.coneInnerAngle = 360;
-panner.coneOuterAngle = 0;
-panner.coneOuterGain = 0;
-panner.positionX.setValueAtTime(0, audioContext.currentTime);
-panner.positionY.setValueAtTime(0, audioContext.currentTime);
-panner.positionZ.setValueAtTime(0, audioContext.currentTime);
-
-// Connect the nodes
-source.connect(panner);
-panner.connect(audioContext.destination);
-
-// Start playing the audio
-source.start();
-
-console.log('Playback started with HRTF');
-} catch (error) {
-console.error('Error playing audio:', error);
-}
-}
-
-function expandMusicMenu() {
-
-}
-
-function closeMusicMenu() {
-
 }</script>

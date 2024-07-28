@@ -41,12 +41,12 @@ Grid
     Import: Music/SongPlayer
     Import: Buttons/BottomRight
 
-Wrapper
-    position: fixed
-    bottom: 6rem
-    left: 1.5rem
+// Wrapper
+//     position: fixed
+//     bottom: 6rem
+//     left: 1.5rem
 
-    Import: Music/Menu
+//     Import: Music/Menu
 
 // Wrapper
 //     position: fixed
