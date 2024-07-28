@@ -47,6 +47,7 @@ function openPage(req, res, routePath) {
                     ${DOM.html}
                     <style>${style}</style>
                     <script>${script}</script>
+                    ${DOM.endHtml}
                 </body>
             </html>
             `)

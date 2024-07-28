@@ -1,0 +1,41 @@
+
+
+{
+
+    function playMusic() {
+        playSong("the way i am charlie puth")
+    }
+
+
+}
+
+VStack
+    @id: MusicMenuScreenRest
+    background: url('albums/Voicenotes/cover.png') center center no-repeat
+    background-size: cover
+    border-radius: 0.75rem
+    overflow: hidden
+
+    Image: albums/Voicenotes/cover.png
+        @onclick: playMusic()
+        @class: MusicMenuPlayingAlbum
+        height: 15rem
+        width: 15rem
+        background: [primary75]
+
+    VStack
+        @class: MusicMenuPlayingInfo
+        grid-column: auto min-content
+        align-items: center
+        padding: 1.5rem
+        background: [primary25]
+        backdrop-filter: blur(1.5rem)
+        line-height: 1
+        
+        Text: The Way I Am
+            margin-bottom: 0.25rem
+            weight: 600
+        Text: Charlie Puth
+            size: 12pt
+            weight: 500
+            opacity: 0.75

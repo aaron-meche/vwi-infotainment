@@ -60,7 +60,7 @@ viewFiles.forEach(file => {
         const head = [getBaseHeadHTML(__dirname), DOM.head].join("\n");
         const style = "<style>" + [getBaseCSS(__dirname), DOM.css].join("\n") + "</style>"
         const script = "<script>" + [getBaseJS(__dirname), DOM.js].join("\n") + "</script>";
-        const htmlFileContent = head + DOM.html + style + script
+        const htmlFileContent = head + DOM.html + style + script + DOM.endHtml
         const htmlFilePath = path.join(outputPath, file.relativePath, "index.html")
         fs.mkdirSync(file.relativePath, { recursive: true });
         fs.writeFileSync(htmlFilePath, htmlFileContent, 'utf-8');

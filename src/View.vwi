@@ -4,6 +4,8 @@
     document.documentElement.style.setProperty('--sat', "30%")
 }
 
+ImportJS: ChatGPT
+
 Import: Foundation
 Import: API/Map
 Import: API/APIs
@@ -13,18 +15,22 @@ PageIcon: favicon.png
 
 // TOP LEFT
 // Speed + Limit
-VStack
+Grid
     @id: SpeedDisplay
+    grid-row: min-content min-content auto
+    gap: 2.5rem
     position: fixed
     top: 1.15rem
     left: 2.5rem
+    height: calc(100vh - 1.15rem - 6rem)
     pointer-events: none
-    transition: translate 350ms
 
-    Import: Main/SpeedDisplay
+    Import: SpeedDisplay/Speed
         width: fit-content
-    Import: Main/SpeedLimitDisplay
+    Import: SpeedDisplay/SpeedLimit
         width: fit-content
+    Block
+        @id: LowerSpeedSpace
 
 Grid
     position: fixed
@@ -36,17 +42,24 @@ Grid
     background: [primary25]
     backdrop-filter: blur(1.5rem)
 
-    Import: Buttons/BottomLeft
+    Import: BottomBar/BottomLeft
     // Block
     Import: Music/SongPlayer
-    Import: Buttons/BottomRight
+    Import: BottomBar/BottomRight
 
-// Wrapper
-//     position: fixed
-//     bottom: 6rem
-//     left: 1.5rem
+Wrapper
+    position: fixed
+    bottom: 6rem
+    left: 1.5rem
 
-//     Import: Music/Menu
+    Import: Music/BottomLeft
+
+Wrapper
+    position: fixed
+    top: 1.5rem
+    right: 1.5rem
+
+    Import: Music/TopRight
 
 // Wrapper
 //     position: fixed

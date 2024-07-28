@@ -5,36 +5,37 @@
 
     // Load YouTube IFrame Player API
     function loadYouTubeIframeAPI() {
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    }
+        return new Promise((resolve) => {
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    // Ensure the player div exists
-    const playerDiv = document.createElement('div');
-    playerDiv.id = 'player';
-    document.body.appendChild(playerDiv);
-
-    // Create a YouTube player
-    let player;
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-            height: '0',  // Set height and width to 0 to make it invisible
-            width: '0',
-            events: {
-                'onReady': onPlayerReady
-            }
+            // Resolve the promise when the API is ready
+            window.onYouTubeIframeAPIReady = () => {
+                resolve();
+            };
         });
     }
 
-    function onPlayerReady(event) {
-        // Player is ready
-        console.log('YouTube Player is ready.');
-        // Example usage: Play a song once the player is ready
-        // searchAndPlay('Bohemian Rhapsody');
+    // Create a YouTube player
+    let player;
+    function initializeYouTubePlayer() {
+        return new Promise((resolve) => {
+            player = new YT.Player('player', {
+                height: '0',  // Set height and width to 0 to make it invisible
+                width: '0',
+                events: {
+                    'onReady': (event) => {
+                        console.log('YouTube Player is ready.');
+                        resolve();
+                    }
+                }
+            });
+        });
     }
 
+    // Function to search for a song and play it
     function searchAndPlay(song) {
         const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodeURIComponent(song)}&key=${API_KEY}`;
 
@@ -53,6 +54,7 @@
             });
     }
 
+    // Function to play a video by its ID
     function playVideo(videoId) {
         if (player && typeof player.loadVideoById === 'function') {
             player.loadVideoById(videoId);
@@ -61,7 +63,22 @@
         }
     }
 
-    // Load the YouTube IFrame Player API
-    loadYouTubeIframeAPI();
+    // Main function to be called when needed
+    async function setupYouTubePlayer() {
+        const playerDiv = document.createElement('div')
+        playerDiv.id = 'player'
+        document.body.appendChild(playerDiv)
+        await loadYouTubeIframeAPI();
+        await initializeYouTubePlayer();
+    }
+
+    // Example usage: To be called when you want to search and play a song
+    async function playSong(song) {
+        await setupYouTubePlayer();
+        searchAndPlay(song);
+    }
+
+    // Usage:
+    // Call playSong('Bohemian Rhapsody') when you want to search and play the song
 
 }

@@ -42,6 +42,7 @@ export class View {
     jsImports = [] // array of .js import calls
     cssImports = [] // array of .js import calls
     head = [] // Main HTML Head
+    endHtml = [] // End HTML
     html = [] // Main HTML Body
     js = [] // Main JS Store
     css = [] // Main CSS Store
@@ -69,6 +70,7 @@ export class View {
         callback({
             head: this.head.join("\n"), 
             html: this.html.join("\n"), 
+            endHtml: this.endHtml.join("\n"),
             js: this.js.join("\n"),
             css: this.css.join("\n"), 
         })
@@ -195,7 +197,6 @@ export class View {
     // Structure Library
     structures = {
         build: {
-            
             struct: (name, text, attr, type, bypassLiveState)  => {
                 if (bypassLiveState) {
                     this.html.push(`<${type ? type : "div"} ${this.gatherAttributes(true)} ${attr ? attr : ""} ui="${name?.trim()}">`)
@@ -261,6 +262,7 @@ export class View {
             let filecontent = fs.readFileSync(path.join(this.directory, `src/${filename}.vwi`), 'utf-8')
             new View(filecontent, resDOM => {
                 this.structures.build.struct("Import", resDOM.html, null, null, true)
+                this.endHtml.push(resDOM.endHtml)
                 this.head.push(resDOM.head)
                 this.js.push(resDOM.js)
                 this.css.push(resDOM.css)
@@ -268,7 +270,7 @@ export class View {
         },
         "ImportJS": line => {
             let val = line.split(":")[1].trim()
-            this.head.push(`<script ${this.gatherAttributes(true)} src="${val}.js"></script>`)
+            this.endHtml.push(`<script ${this.gatherAttributes(true)} src="${val}.js"></script>`)
         },
         "ImportJSURL": line => {
             let val = line.split(":")[1].trim()
@@ -391,7 +393,6 @@ function liveStateCheck(open, inside) {
     if (fullStr.split("").includes("{") && fullStr.split("").includes("}")) {
         open += " live='true' "
     }
-
     return `<${open}>${inside}`
 }
 

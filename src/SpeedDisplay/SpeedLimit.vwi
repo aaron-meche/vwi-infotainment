@@ -1,0 +1,25 @@
+
+{
+    // state_func.push(() => {
+
+    // })
+}
+
+
+VStack
+    @class:
+    @id: SpeedLimit
+    padding: 1rem
+    background: rgb(255, 255, 255, 0.75)
+    backdrop-filter: blur(10pt)
+    line-height: 1
+    color: black
+    align: center
+    border-radius: 0.25rem
+    
+    Text: MAX
+        size: 14pt
+        weight: 500
+    Text: {store.get("speed limit")}
+        size: 28pt
+        weight: 700
