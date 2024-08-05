@@ -2,7 +2,7 @@
     "name": "vwi",
     "version": "1.0.0",
     "description": "VWI Language Framework",
-    "main": "server.js",
+    "main": "system/server.js",
     "type": "module",
     "scripts": {
         "host": "nodemon system/server.js",
@@ -10,17 +10,15 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/aaron-meche/vwi.git"
+        "url": "git+https://github.com/aaron-meche/vwi-infotainment.git"
     },
     "author": "Aaron Meche",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/aaron-meche/vwi/issues"
+        "url": "https://github.com/aaron-meche/vwi-infotainment/issues"
     },
-    "homepage": "https://github.com/aaron-meche/vwi#readme",
+    "homepage": "https://github.com/aaron-meche/vwi-infotainment#readme",
     "dependencies": {
-        "axios": "^1.7.2",
-        "compression": "^1.7.4",
         "express": "^4.19.2",
         "serve-static": "^1.15.0"
     }
