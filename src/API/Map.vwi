@@ -184,6 +184,7 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
     }
 }
 
+// MAIN MAP
 Block
     position: fixed
     top: 0

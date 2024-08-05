@@ -1,0 +1,59 @@
+
+
+
+{
+
+}
+
+// TOP LEFT
+// Speed + Limit
+Grid
+    @id: SpeedDisplay
+    grid-row: min-content min-content auto
+    gap: 2.5rem
+    position: fixed
+    top: 1.15rem
+    left: 2.5rem
+    height: calc(100vh - 1.15rem - 6rem)
+    pointer-events: none
+
+    Import: SpeedDisplay/Speed
+        width: fit-content
+    Import: SpeedDisplay/SpeedLimit
+        width: fit-content
+    Block
+        @id: LowerSpeedSpace
+
+// BOTTOM LEFT
+// Current Music
+Wrapper
+    position: fixed
+    bottom: 6rem
+    left: 1.5rem
+
+    Import: Music/BottomLeft
+
+// BOTTOM
+// Bottom Bar
+Grid
+    position: fixed
+    bottom: 0
+    left: 0
+    height: 4.5rem
+    width: 100vw
+    grid-column: min-content auto min-content
+    background: [primary25]
+    backdrop-filter: blur(1.5rem)
+
+    Import: BottomBar/BottomLeft
+    Import: Music/SongPlayer
+    Import: BottomBar/BottomRight
+
+// TOP RIGHT
+// Voice Control
+Wrapper
+    position: fixed
+    top: 1.5rem
+    right: 1.5rem
+
+    Import: Music/TopRight

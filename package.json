@@ -5,8 +5,8 @@
     "main": "server.js",
     "type": "module",
     "scripts": {
-        "host": "nodemon server.js",
-        "build": "node builder.js"
+        "host": "nodemon system/server.js",
+        "build": "node system/builder.js"
     },
     "repository": {
         "type": "git",

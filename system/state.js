@@ -6,12 +6,10 @@ window.addEventListener("DOMContentLoaded", () => {
     updateState()
 })
 
-let state_funcs = []
 function updateState() {
     buildLiveText()
     buildEachStacks()
     buildCustomStructs()
-    state_funcs.forEach(func => func())
 }
 
 
@@ -20,15 +18,21 @@ function processLiveText() {
     document.querySelectorAll(`[live]`).forEach(elem => {
         elem.setAttribute("live_state_index", live_state.length)
         live_state.push({
-            html: elem.innerHTML,
-            elem: elem
+            elem: elem,
+            wrapper: elem.getAttribute("wrapper"),
+            outer: elem.outerHTML,
         })
     })
 }
 function buildLiveText() {
     document.querySelectorAll(`[live]`).forEach(elem => {
         let target = live_state[elem.getAttribute("live_state_index")]
-        elem.innerHTML = evalString(decodeHTML(target.html))
+        let outerHTML = target.outer
+        let closingBracketIndex = outerHTML.indexOf('>')
+        let innerContent = outerHTML.substring(closingBracketIndex + 1)
+        let newOpeningTag = `<${decodeHTML(target.wrapper)}>`
+        let newElement = `${newOpeningTag}${innerContent}`
+        target.elem.outerHTML = evalString(newElement)
     })
 }
 
@@ -78,7 +82,7 @@ function processCustomStructs() {
             content: elem.innerHTML,
         })
     })
-}
+} 
 function buildCustomStructs() {
     document.querySelectorAll(`[custom_struct_call]`).forEach(elem => {
         let struct = custom_structs.find(struct => struct.name == elem.getAttribute("ui"))
@@ -180,20 +184,20 @@ function Icon(icon) {
 }
 
 let encodeHTMLElements = [
-    ['"', '&doubleQuote'],
-    ["'", "&singleQuote"],
-    ["(", "&openParenthesis"],
-    [")", "&closeParenthesis"],
-    ["[", "&openBracket"],
-    ["]", "&closeBracket"],
-    ["{", "&openBrace"],
-    ["}", "&closeBrace"],
-    ["<", "&openHTML"],
-    [">", "&closeHTML"],
+    ['"', '&dQuote'],
+    ["'", "&sQuote"],
+    ["(", "&oParen"],
+    [")", "&cParen"],
+    ["[", "&oBrack"],
+    ["]", "&cBrack"],
+    ["{", "&oBrace"],
+    ["}", "&cBrace"],
+    ["<", "&oHTML"],
+    [">", "&cHTML"],
 ]
 function encodeHTML(html) {
     encodeHTMLElements.forEach(charArr => {
-        html = html.replaceAll(charArr[0], charArr[1])
+        html = html?.replaceAll(charArr[0], charArr[1])
     })
     return html
 }

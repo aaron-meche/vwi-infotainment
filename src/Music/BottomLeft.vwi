@@ -2,8 +2,15 @@
 
 {
 
-    function playMusic() {
-        playSong("the way i am charlie puth")
+    store.set("playing", {
+        title: "Garden",
+        artist: "SZA",
+        album: "Ctrl"
+    })
+
+    function gesturePlayMusic() {
+        let playing = store.get("playing")
+        playSong(playing.title + " by " + playing.artist)
     }
 
 
@@ -11,31 +18,44 @@
 
 VStack
     @id: MusicMenuScreenRest
-    background: url('albums/Voicenotes/cover.png') center center no-repeat
+    background: url('albums/Ctrl/cover.png') center center no-repeat
     background-size: cover
     border-radius: 0.75rem
     overflow: hidden
 
-    Image: albums/Voicenotes/cover.png
-        @onclick: playMusic()
+    Image: albums/Ctrl/cover.png
+        @onclick: gesturePlayMusic()
         @class: MusicMenuPlayingAlbum
         height: 15rem
         width: 15rem
         background: [primary75]
 
-    VStack
+    Grid
         @class: MusicMenuPlayingInfo
         grid-column: auto min-content
         align-items: center
-        padding: 1.5rem
-        background: [primary25]
+        padding: 1rem
+        background: [content25]
+        color: [primary]
         backdrop-filter: blur(1.5rem)
         line-height: 1
         
-        Text: The Way I Am
-            margin-bottom: 0.25rem
-            weight: 600
-        Text: Charlie Puth
-            size: 12pt
-            weight: 500
-            opacity: 0.75
+        VStack
+            Text: {store.get("playing").title}
+                margin-bottom: 0.25rem
+                weight: 600
+            Text: {store.get("playing").artist}
+                size: 12pt
+                weight: 500
+                opacity: 0.75
+        Text: {Icon("play")}
+            @onclick: togglePlayPause()
+            display: grid
+            align-items: center
+            height: 100%
+            padding: 0 1rem
+
+.BottomLeftMusicMenuPlayerButton
+    height: 100%
+    display: grid
+    align-items: center

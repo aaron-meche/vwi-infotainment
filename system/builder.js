@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { View, getBaseJS, getBaseHeadHTML, getBaseCSS } from './system/compiler.js'
+import { View, getBaseJS, getBaseHeadHTML, getBaseCSS } from './compiler.js'
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);

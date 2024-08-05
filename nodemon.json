@@ -2,6 +2,6 @@
     "watch": ["src", "system", "public"],
     "ext": "js,json,html,css,vwi",
     "ignore": ["node_modules"],
-    "exec": "node --experimental-modules server.js"
-  }
+    "exec": "node --experimental-modules system/server.js"
+}
   

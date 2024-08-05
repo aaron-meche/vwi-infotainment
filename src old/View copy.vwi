@@ -1,0 +1,81 @@
+
+
+Import: Foundation
+
+
+[] CustomCard: label
+    Grid
+        @class: control
+        grid-column: auto min-content
+        gap: 1.5rem
+        align-items: center
+
+        Text: $label
+            size: 12pt
+        Block
+            width: fit-content
+            background: rgb(50 50 50)
+            border-radius: 100vh
+
+            Block
+                height: 0.75rem
+                width: 0.75rem
+                margin: 0.25rem
+                margin-right: 1rem
+                background: rgb(150 0 0)
+                border-radius: inherit
+
+// Custom Card
+VStack
+    width: fit-content
+    padding: 0.75rem
+    margin: 1.5rem
+    background: rgb(25 25 25)
+    border-radius: 0.75rem
+
+    HStack
+        align-items: center
+        margin: 0.75rem
+        size: 16pt
+        weight: 500
+        Text: {Icon("headphones")}
+            margin-right: 0.75rem
+        Text: Music and Audio
+
+    CustomCard
+        @label: 3D Spatial Audio
+    CustomCard
+        @label: Active Sound
+    CustomCard
+        @label: Song Crossfade
+    CustomCard
+        @label: Adaptive Volume
+
+VStack
+    width: fit-content
+    padding: 0.75rem
+    margin: 1.5rem
+    background: rgb(25 25 25)
+    border-radius: 0.75rem
+
+    HStack
+        align-items: center
+        margin: 0.75rem
+        size: 16pt
+        weight: 500
+        Text: {Icon("map")}
+            margin-right: 0.75rem
+        Text: Map and Visual
+
+    CustomCard
+        @label: Speed Alerts
+
+    
+
+.control
+    width: 16rem
+    padding: 0.75rem
+    border-radius: 0.75rem
+    cursor: pointer
+.control:hover
+    background: rgb(35 35 35)

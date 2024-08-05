@@ -58,7 +58,13 @@
         `)
             .then(response => {
                 // let res = JSON.parse(response)
-                // console.log(res.type)
+                // store.set("playing", {
+                //     title: song.title,
+                //     artist: song.artist,
+                //     album: song.album
+                // })
+                console.log(res)
+                playSong("play kill bill by sza")
             })
             .catch(error => { })
 

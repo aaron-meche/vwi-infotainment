@@ -85,6 +85,6 @@ body{
     margin: 0;
     font-size: 14pt;
     font-family: BaileyScript;
-    background: var(--bg);
+    background: var(--primary);
     color: var(--content);
 }

@@ -34,7 +34,7 @@ HStack
     align-items: center
     margin: 0 2rem
 
-    Text: N^
+    Text: {Icon("compass")}
         @class: BottomMapButton
         @onclick: directNorth()
         weight: 500

@@ -73,12 +73,13 @@
     }
 
     // Example usage: To be called when you want to search and play a song
-    async function playSong(song) {
+    async function playSong(prompt) {
         await setupYouTubePlayer();
-        searchAndPlay(song);
+        searchAndPlay(prompt);
     }
 
     // Usage:
     // Call playSong('Bohemian Rhapsody') when you want to search and play the song
 
 }
+

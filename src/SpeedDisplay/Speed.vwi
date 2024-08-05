@@ -13,7 +13,7 @@ HStack
     
     Text: {store.get("speed")}
         margin-right: 0.5rem
-        size: 75pt
+        size: 85pt
         weight: 600
     Text: mph
         size: 25pt
