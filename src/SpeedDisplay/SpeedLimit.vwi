@@ -22,4 +22,4 @@ VStack
         weight: 500
     Text: {store.get("speed limit")}
         size: 28pt
-        weight: 700
+        weight: 600

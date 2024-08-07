@@ -1,14 +1,4 @@
-// 
-// 
-// 
-// 
-// 
-// Storage
-// 
-// 
-// 
-// 
-// 
+
 const store = {
     key: "song",
     get: key => {
@@ -40,6 +30,7 @@ const store = {
         if (cb) cb()
         try {
             updateState()
+            console.log("Store Updated")
         }
         catch (error) { }
     },

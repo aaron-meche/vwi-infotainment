@@ -9,6 +9,7 @@ import express from 'express';
 const __filename = fileURLToPath(import.meta.url);
 const __systemDir = path.dirname(__filename);
 const __projectDir = path.join(__systemDir, "..")
+const __publicDir = path.join(__projectDir, "public")
 const __srcDir = path.join(__projectDir, "src")
 const __port = 3000;
 

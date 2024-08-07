@@ -1,106 +1,66 @@
 
 
 {
-    const TopRightSTTButton = document.getElementById('SpeechToTextButton');
-    const TopRightSTTTranscript = document.getElementById('SpeechToTextTranscript');
+    store.set("display music module controls", "false")
+    store.set("playing", {
+        title: "Garden",
+        artist: "SZA",
+        album: "Ctrl"
+    })
+    store.set("music is playing", "false")
 
-    // Check for browser support
-    if ('webkitSpeechRecognition' in window) {
-        const recognition = new webkitSpeechRecognition();
-        recognition.continuous = false; // Set to true if you want continuous results
-        recognition.interimResults = false; // Set to true if you want interim results
-        recognition.lang = 'en-US'; // Set language
-
-        // Handle recognition results
-        recognition.onresult = event => {
-            const result = event.results[0][0].transcript;
-            document.getElementById('SpeechToTextTranscript').innerHTML = result;
-            speechToTextResult(result)
-        };
-
-        // Handle recognition errors
-        recognition.onerror = function(event) {
-            console.error('Error occurred in recognition: ', event.error);
-        };
-
-        // Update button text when recognition ends
-        recognition.onend = function() {
-            recognizing = false;
-            TopRightSTTButton.innerHTML = Icon("microphone")
-            // TopRightSTTTranscript.style.display = "none"
-        };
-
-        let recognizing = false;
-
-        function speechToText() {
-            if (recognizing) {
-                recognition.stop();
-                TopRightSTTButton.innerHTML = Icon("microphone")
-                TopRightSTTTranscript.style.display = "none"
-            } 
-            else {
-                recognition.start();
-                TopRightSTTButton.innerHTML = Icon("stop")
-                TopRightSTTTranscript.innerHTML = ""
-                TopRightSTTTranscript.style.display = "block"
-            }
-            recognizing = !recognizing;
-        }
-
-        TopRightSTTButton.addEventListener('click', speechToText);
+    function toggleMusicModuleControls() {
+        store.set("display music module controls", (store.get("display music module controls") == "true" ? "false" : "true"))
     }
 
-    function speechToTextResult(result) {
-        chatGPT(`analyze whether the following response is asking to play a song / artist / album, respond like format A, else response like format B
-        format A: { "type": (song / artist / album, whichever was requested), "response": (value, so the actual song title, or album title, etc.) }
-        format B: { "type": "general", "response": (the answer to whatever was asked) }
-        response: "${result}"
-        `)
-            .then(response => {
-                // let res = JSON.parse(response)
-                // store.set("playing", {
-                //     title: song.title,
-                //     artist: song.artist,
-                //     album: song.album
-                // })
-                console.log(res)
-                playSong("play kill bill by sza")
-            })
-            .catch(error => { })
 
-    }
 }
 
-Grid
-    width: 50vw
-    grid-column: auto min-content
-    justify-content: right
-    gap: 1.5rem
+VStack
+    @id: MusicMenuScreenRest
+    background: url('albums/Ctrl/cover.png') center center no-repeat
+    background-size: cover
+    border-radius: 0.75rem
+    overflow: hidden
 
-    Block
-        align: right
+    Image: albums/Ctrl/cover.png
+        @onclick: toggleMusicModuleControls()
+        @class: MusicMenuPlayingAlbum
+        height: 15rem
+        width: 15rem
+        background: [primary75]
 
-        Text: This is the transcript of what i am saying right now
-            @id: SpeechToTextTranscript
-            height: fit-content
-            width: fit-content
-            padding: 1.5rem
-            background: [primary50]
-            backdrop-filter: blur(1.5rem)
-            border-radius: 0.75rem
-            display: none
-
-    VStack
-        @id: SpeechToTextButton
-        height: fit-content
-        padding: 1.5rem
+    Grid
+        @class: MusicMenuPlayingInfo
+        padding: 1.25rem 0
+        padding-bottom: {store.get("display music module controls") == "true" ? "0" : "1.25rem"}
         background: [primary50]
+        color: [content]
         backdrop-filter: blur(1.5rem)
-        border-radius: 100rem
+        line-height: 1
         
-        Text: {Icon("microphone")}
+        VStack
+            align: center
+            Text: {store.get("playing").title}
+                margin-bottom: 0.25rem
+                weight: 500
+            Text: {store.get("playing").artist}
+                size: 12pt
+                weight: 500
+                opacity: 0.75
 
-.TopRightMenuButton
-    padding: 1.5rem
+        Grid
+            display: {store.get("display music module controls") == "true" ? "grid" : "none"}
+            grid-column: repeat(3, 1fr)
+            align-items: center
+            align: center
+            Text: {Icon("microphone")}
+                @class: TopRightMusicButton
+            Text: {store.get("music is playing") == "true" ? Icon("pause") : Icon("play")}
+                @class: TopRightMusicButton
+            Text: {Icon("list")}
+                @class: TopRightMusicButton
 
-Wrapper
+
+.TopRightMusicButton
+    padding: 1.5rem 0

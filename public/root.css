@@ -37,39 +37,47 @@
     font-family: BaileyScript;
     src: url('./SansSerif/ExtraBlack.otf') format('opentype');
     font-weight: 900;
+}@font-face {
+    font-family: Poppins;
+    src: url('./Poppins/Poppins-ExtraLight.ttf') format('opentype');
+    font-weight: 200;
+}
+@font-face {
+    font-family: Poppins;
+    src: url('./Poppins/Poppins-Light.ttf') format('opentype');
+    font-weight: 300;
+}
+@font-face {
+    font-family: Poppins;
+    src: url('./Poppins/Poppins-Regular.ttf') format('opentype');
+    font-weight: 400;
+}
+@font-face {
+    font-family: Poppins;
+    src: url('./Poppins/Poppins-Medium.ttf') format('opentype');
+    font-weight: 500;
+}
+@font-face {
+    font-family: Poppins;
+    src: url('./Poppins/Poppins-Bold.ttf') format('opentype');
+    font-weight: 600;
+}
+@font-face {
+    font-family: Poppins;
+    src: url('./Poppins/Poppins-ExtraBold.ttf') format('opentype');
+    font-weight: 700;
+}
+@font-face {
+    font-family: Poppins;
+    src: url('./Poppins/Poppins-Black.ttf') format('opentype');
+    font-weight: 800;
+}
+@font-face {
+    font-family: Sen;
+    src: url('./Sen/Sen-VariableFont_wght.ttf') format('opentype');
 }
 
 :root{
-    --primary: black;
-    --primary75: black;
-    --primary50: black;
-    --primary25: black;
-
-    --primary1: black;
-    --primary175: black;
-    --primary150: black;
-    --primary125: black;
-
-    --primary2: black;
-    --primary275: black;
-    --primary250: black;
-    --primary225: black;
-
-    --content: white;
-    --content75: white;
-    --content50: white;
-    --content25: white;
-
-    --content1: white;
-    --content175: white;
-    --content150: white;
-    --content125: white;
-
-    --content2: white;
-    --content275: white;
-    --content250: white;
-    --content225: white;
-
     --red: hsl(0, 80%, 50%);
     --orange: hsl(30, 80%, 50%);
     --yellow: hsl(60, 80%, 40%);
@@ -84,7 +92,7 @@
 body{
     margin: 0;
     font-size: 14pt;
-    font-family: BaileyScript;
+    font-family: Poppins;
     background: var(--primary);
     color: var(--content);
 }

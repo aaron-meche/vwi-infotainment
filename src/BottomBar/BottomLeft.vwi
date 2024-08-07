@@ -12,7 +12,7 @@ HStack
 
     VStack
         Text: {store.get("current city")}
-            weight: 600
+            weight: 500
         HStack
             Text: {store.get("current county")},
                 margin-right: 0.25rem

@@ -2,38 +2,61 @@
 
 window.addEventListener("DOMContentLoaded", () => {
     processCustomStructs()
-    processLiveText()
+    liveState.process()
     updateState()
 })
 
 function updateState() {
-    buildLiveText()
+    liveState.updateAttr()
+    liveState.updateText()
     buildEachStacks()
     buildCustomStructs()
 }
 
 
 let live_state = []
-function processLiveText() {
-    document.querySelectorAll(`[live]`).forEach(elem => {
-        elem.setAttribute("live_state_index", live_state.length)
-        live_state.push({
-            elem: elem,
-            wrapper: elem.getAttribute("wrapper"),
-            outer: elem.outerHTML,
+const liveState = {
+    process: () => {
+        document.querySelectorAll(`[live]`).forEach((elem, index) => {
+            elem.setAttribute("live_id", index);
+            let attributes = [];
+            Array.from(elem.attributes).forEach(attr => {
+                attributes.push([attr.name, attr.value]);
+            });
+    
+            live_state[index] = {
+                wrapper: elem.getAttribute("wrapper"),
+                content: elem.getAttribute("content"),
+                attributes: attributes
+            };
         })
-    })
-}
-function buildLiveText() {
-    document.querySelectorAll(`[live]`).forEach(elem => {
-        let target = live_state[elem.getAttribute("live_state_index")]
-        let outerHTML = target.outer
-        let closingBracketIndex = outerHTML.indexOf('>')
-        let innerContent = outerHTML.substring(closingBracketIndex + 1)
-        let newOpeningTag = `<${decodeHTML(target.wrapper)}>`
-        let newElement = `${newOpeningTag}${innerContent}`
-        target.elem.outerHTML = evalString(newElement)
-    })
+    },
+    updateAttr: () => {
+        document.querySelectorAll(`[live]`).forEach(elem => {
+            let liveId = elem.getAttribute('live_id');
+            let target = live_state[liveId];
+
+            let excluded_attr = ["wrapper", "content", "live", "live_id"]
+            let rawAttr = target.attributes.filter(attr => !excluded_attr.includes(attr[0]));
+            let copyAttr = rawAttr.map(attr => [...attr])
+            copyAttr.forEach(attrPair => {
+                attrPair[0] = evalString(decodeHTML(attrPair[0]))
+                attrPair[1] = evalString(decodeHTML(attrPair[1]))
+                elem.setAttribute(attrPair[0], attrPair[1])
+            })
+        })
+    },
+    updateText: () => {
+        document.querySelectorAll(`[live]`).forEach(elem => {
+            let liveId = elem.getAttribute('live_id');
+            let target = live_state[liveId];
+            
+            let rawContent = decodeHTML(target.content)
+            if (rawContent.includes("{") || rawContent.includes("}")) {
+                elem.innerHTML = evalString(rawContent)
+            }
+        })
+    }
 }
 
 let each_stacks = []
@@ -97,44 +120,22 @@ function buildCustomStructs() {
 }
 
 function evalString(string) {
-    let res = string
-    let layers = 0
-    if (res.includes("{")) {
-        let callStack = []
-        let callCount = res.split("{").length - 1
-        for (let i = 0; i < callCount; i ++) {
-            let index = res.indexOf("{")
-            let evalStr = ""
-            for (let j = index + 1; j < res.length; j++) {
-                if (res.charAt(j) == "{") {
-                    layers++
-                }
-                else if (res.charAt(j) == "}") {
-                    if (layers > 0) {
-                        layers--
-                        i++
-                    }
-                    else {
-                        break
-                    }
-                }
-                evalStr += res.charAt(j)
-            }
+    if (string.includes("{") && string.includes("}")) {
+        let callCount = string.split("{").length - 1;
+        
+        for (let i = 0; i < callCount; i++) {
+            let openIndex = string.indexOf("{");
+            let closeIndex = string.indexOf("}");
+            let evalString = string.substring(openIndex + 1, closeIndex);
+
             try {
-                callStack.push([`+${evalStr}}`, eval(evalStr?.replaceAll("&quot;", '"'))])
-                res = res.replace("{","+")
+                let evaluatedValue = eval(evalString);
+                string = string.replace(`{${evalString}}`, evaluatedValue);
+            } catch (error) {
             }
-            catch (error) { }
         }
-        callStack.forEach(call => {
-            res = res.replace(call[0], call[1])
-        })
     }
-    try {
-        res = eval(res)
-    }
-    catch (error) { }
-    return res
+    return string;
 }
 
 function extractEvalStrings(string) {
@@ -203,7 +204,7 @@ function encodeHTML(html) {
 }
 function decodeHTML(html) {
     encodeHTMLElements.forEach(charArr => {
-        html = html.replaceAll(charArr[1], charArr[0])
+        html = html?.replaceAll(charArr[1], charArr[0])
     })
     return html
 }

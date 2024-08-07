@@ -1,0 +1,47 @@
+
+{
+    store.set("size", 40)
+    store.set("weight", 500)
+
+    function getCurrentTime() {
+        return new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    }
+
+    function updateFontSizeSlider() {
+        let slider = document.getElementById("fontSizeSlider")
+        let value = slider.value
+        store.set("size", value)
+    }
+
+    function updateFontWeightSlider() {
+        let slider = document.getElementById("fontWeightSlider")
+        let value = slider.value
+        store.set("weight", value)
+    }
+}
+
+Import: Foundation
+
+Input
+    @type: range
+    @min: 12
+    @max: 150
+    @value: 40
+    @oninput: updateFontSizeSlider()
+    @id: fontSizeSlider
+    margin: 1.5rem
+    width: 20rem
+Input
+    @type: range
+    @min: 100
+    @max: 900
+    @value: 500
+    @oninput: updateFontWeightSlider()
+    @id: fontWeightSlider
+    margin: 1.5rem
+    width: 20rem
+
+Text: Hello, world
+    margin: 1.5rem
+    size: {store.get("size") + "pt"}
+    weight: {store.get("weight")}

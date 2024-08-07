@@ -1,5 +1,7 @@
 
 {
+    // store.set("map overlay visible", "false")
+    store.set("map overlay visible", "true")
     document.documentElement.style.setProperty('--hue', 200)
     document.documentElement.style.setProperty('--sat', "30%")
 }
@@ -10,23 +12,27 @@ Import: Foundation
 Import: API/Map
 Import: API/APIs
 Import: API/TimeManager
+// Import: Music/VoiceCapture
 PageTitle: Infotainment
 PageIcon: favicon.png
 
-Import: MapOverlay
 
-// Wrapper
-//     position: fixed
-//     top: 1.5rem
-//     right: 1.5rem
-    
-//     Import: Music/NoiseCancellation
+Wrapper
+    display: {store.get("map overlay visible") == "true" ? "block" : "none"}
+    Block
+        position: fixed
+        top: 0
+        left: 0
+        height: 100vh
+        width: 100vw
+        z-index: 0
+        Block
+            @id: map
+            height: 100%
+            width: 100%
 
-// BOTTOM CENTER
-// Location Info
-// Block
-//     position: fixed
-//     bottom: 0
-//     left: 50vw
-    
-//     Import: Main/LocationPill
+    Import: MapOverlay
+
+Wrapper
+    display: {store.get("map overlay visible") == "false" ? "block" : "none"}
+    Import: Entrance

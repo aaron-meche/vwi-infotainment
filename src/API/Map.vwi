@@ -61,7 +61,7 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
             store.set("heading", 0)
         },
     }
-    dev_locations["Milwaukee"]()
+    // dev_locations["Rockton"]()
 
     const map_styles = [
         "mapbox://styles/aaronmeche/clyp7z96b007x01qn4rx6fmbb",
@@ -83,48 +83,55 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
         }
     }
 
-    const map = new mapboxgl.Map(standard_map_config())
-
-    const el = document.createElement('div')
-    el.className = "marker"
- 
-    const marker = new mapboxgl.Marker(el).setLngLat([store.get("position long"), store.get("position lat")]).addTo(map);
-
+    let map, marker
     let lastPosition = null
-    let targetPosition = { lat: store.get("position lat"), lng: store.get("position long") }
+    let targetPosition = { lat: store.get("position lat"), long: store.get("position long") }
     let currentAnimationFrame = null
 
-    if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(position => {
-            const newLat = position.coords.latitude;
-            const newLng = position.coords.longitude;
-            const latDiff = Math.abs(newLat - store.get("position lat"));
-            const lngDiff = Math.abs(newLng - store.get("position long"));
-            const threshold = 0.0001;
+    function launchMap() {
+        map = new mapboxgl.Map(standard_map_config())
+        marker = new mapboxgl.Marker(Object.assign(document.createElement('div'), { className: "marker" })).setLngLat([store.get("position long"), store.get("position lat")]).addTo(map);
+        
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(position => {
+                const newLat = position.coords.latitude;
+                const newLng = position.coords.longitude;
+                const latDiff = Math.abs(newLat - store.get("position lat"));
+                const lngDiff = Math.abs(newLng - store.get("position long"));
+                const threshold = 0.0001;
 
-            if (store.get("live follow") == "on") {
-                // store.set("position lat", position.coords.latitude)
-                // store.set("position long", position.coords.longitude)
-                // store.set("heading", position.coords.heading || 0)
-                store.set("speed", Math.ceil(Math.floor(position.coords.speed * 2.23694) || 0))
-                targetPosition.lat = position.coords.latitude;
-                targetPosition.lng = position.coords.longitude;
-                updateAPIs()
-                map.easeTo(standard_map_config())
-            }
+                if (store.get("live follow") == "on") {
+                    store.set("position lat", position.coords.latitude)
+                    store.set("position long", position.coords.longitude)
+                    store.set("heading", position.coords.heading || 0)
+                    store.set("speed", Math.ceil(Math.floor(position.coords.speed * 2.23694) || 0))
+                    targetPosition.lat = position.coords.latitude;
+                    targetPosition.lng = position.coords.longitude;
+                    updateAPIs()
+                    map.easeTo(standard_map_config())
+                }
 
-            
-        }, error => {
-            console.error('Error getting location: ', error);
-        }, {
-            enableHighAccuracy: true,
-            maximumAge: 500,
-            timeout: 27000
-        });
-    } 
-    else {
-        console.error('Geolocation is not supported by this browser.');
+                
+            }, error => {
+                console.error('Error getting location: ', error);
+            }, {
+                enableHighAccuracy: true,
+                maximumAge: 500,
+                timeout: 27000
+            });
+        } 
+        else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+
+        map.on('dragstart', () => store.set("live follow", "off"));
+        map.on('pitchstart', () => store.set("live follow", "off"));
+        map.easeTo(standard_map_config())
+        updateAPIs()
     }
+
+    launchMap()
+
 
     function updateAPIs() {
         // APIs
@@ -132,18 +139,8 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
         updateRoadAPI()
         updateCurrentElevationAPI()
 
-        // TimeManager
         updateSunTimesAPI()
     }
-
-    function handleUserInteraction() {
-        store.set("live follow", "off")
-    }
-
-    map.on('dragstart', () => handleUserInteraction());
-    map.on('pitchstart', () => handleUserInteraction());
-    map.easeTo(standard_map_config())
-    updateAPIs()
 
     function animateToPosition() {
         if (currentAnimationFrame) {
@@ -183,20 +180,6 @@ ImportCSSURL: api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css
         currentAnimationFrame = requestAnimationFrame(animate);
     }
 }
-
-// MAIN MAP
-Block
-    position: fixed
-    top: 0
-    left: 0
-    height: 100vh
-    width: 100vw
-    z-index: 0
-
-    Block
-        @id: map
-        height: 100%
-        width: 100%
 
 .marker
     position: absolute

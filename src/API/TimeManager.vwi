@@ -1,18 +1,54 @@
 
 
 {
-    function buildColorSet(mode, tiers, levels) {
-        let colorTypes = ["primary", "content"]
+    function buildColorSet(mode = 0, tiers = 4, levels = [0.25, 0.5, 0.75, 1]) {
+        // mode   >> 0 (light) or 1 (dark)
+        // tiers  >> content, content1, content2, (how many)
+        // levels >> opacity levels
+        
+        let hue = 100
+        let sat = 0
+        let diffLgt = 4
+
+        let colorTypes = [
+            {
+                name: "primary",
+                hue: hue,
+                sat: sat,
+                lgt: [96, 0]
+            },
+            {
+                name: "content",
+                hue: hue,
+                sat: sat,
+                lgt: [0, 96]
+            },
+            {
+                name: "accent",
+                hue: hue,
+                sat: 50,
+                lgt: [50, 30]
+            },
+            {
+                name: "good",
+                hue: 120,
+                sat: 50,
+                lgt: [50, 40]
+            },
+            {
+                name: "bad",
+                hue: 0,
+                sat: 50,
+                lgt: [50, 40]
+            }
+        ]
 
         for (let i = 0; i < tiers; i++) {
             levels.forEach(level => {
                 colorTypes.forEach(colorType => {
-                    let primaryLight = mode == "light" ? 100 : 0
-                    let contentLight = mode == "light" ? 0 : 100
-                    let lightness = colorType == "primary" ? primaryLight : contentLight
-                    let varName = `--${colorType}${i > 0 ? i : ""}${level < 1 ? 100 * level : ""}`
-                    let varValue = `hsl(0, 0%, ${lightness}%, ${level})`
-                    document.documentElement.style.setProperty(varName, varValue)
+                    let name = `--${colorType.name}${i > 0 ? i : ""}${level < 1 ? level * 100 : ""}`
+                    let hsl = `hsl(${colorType.hue}, ${colorType.sat}%, ${colorType.lgt[mode] - (diffLgt * i * (mode == 1 ? -1 : 1))}%, ${level})`
+                    document.documentElement.style.setProperty(name, hsl);
                 })
             })
         }
@@ -20,23 +56,31 @@
 
     const timeManager = {
         dawn: () => {
-            map.setStyle(map_styles[0])
-            timeManager.mode("light")
+            if (store.get("map overlay visible") == "true") {
+                map.setStyle(map_styles[0])
+            }
+            timeManager.mode(0)
         },
         day: () => {
-            map.setStyle(map_styles[1])
-            timeManager.mode("light")
+            if (store.get("map overlay visible") == "true") {
+                map.setStyle(map_styles[1])
+            }
+            timeManager.mode(0)
         },
         dusk: () => {
-            map.setStyle(map_styles[2])
-            timeManager.mode("dark")
+            if (store.get("map overlay visible") == "true") {
+                map.setStyle(map_styles[2])
+            }
+            timeManager.mode(1)
         },
         night: () => {
-            map.setStyle(map_styles[3])
-            timeManager.mode("dark")
+            if (store.get("map overlay visible") == "true") {
+                map.setStyle(map_styles[3])
+            }
+            timeManager.mode(1)
         },
         mode: (mode) => {
-            buildColorSet(mode, 3, [0.25, 0.5, 0.75, 1])
+            buildColorSet(mode, 8, [0.25, 0.5, 0.75, 1])
         },
     }
 
